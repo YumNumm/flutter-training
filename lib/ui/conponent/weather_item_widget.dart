@@ -9,6 +9,7 @@ class WeatherCategoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final temperatureTextStyle = theme.textTheme.labelLarge;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -23,7 +24,7 @@ class WeatherCategoryWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '**°C',
-                    style: theme.textTheme.labelLarge?.copyWith(
+                    style: temperatureTextStyle?.copyWith(
                       color: Colors.blue,
                     ),
                   ),
@@ -36,7 +37,7 @@ class WeatherCategoryWidget extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '**°C',
-                    style: theme.textTheme.labelLarge?.copyWith(
+                    style: temperatureTextStyle?.copyWith(
                       color: Colors.red,
                     ),
                   ),
