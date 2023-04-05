@@ -1,16 +1,17 @@
-# flutter_training
+# 株式会社ゆめみ 研修課題
 
-A new Flutter project.
+##  環境構築
 
-## Getting Started
+```bash:install.sh
+# リポジトリをクローン
+git clone https://github.com/YumNumm/flutter-training.git
+cd flutter-training
 
-This project is a starting point for a Flutter application.
+# FVMをインストール
+brew tap leavjenn/tap
+brew install fvm
+fvm use
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# パッケージをインストール
+fvm flutter pub get
+```
