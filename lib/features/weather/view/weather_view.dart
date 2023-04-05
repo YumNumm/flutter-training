@@ -23,7 +23,7 @@ class _WeatherViewState extends State<WeatherView> {
                 Expanded(
                   child: Column(
                     children: const [
-                      SizedBox(height: 60),
+                      SizedBox(height: 80),
                       _Buttons(),
                     ],
                   ),
