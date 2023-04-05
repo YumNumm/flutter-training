@@ -6,15 +6,18 @@ class WeatherControlWidgets extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        TextButton(
-          onPressed: () {},
-          child: const Text('Close'),
+        Expanded(
+          child: TextButton(
+            onPressed: () {},
+            child: const Text('Close'),
+          ),
         ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('Reload'),
+        Expanded(
+          child: TextButton(
+            onPressed: () {},
+            child: const Text('Reload'),
+          ),
         ),
       ],
     );
