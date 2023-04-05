@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/ui/conponent/weather_view/weather_icon_widget.dart';
+import 'package:flutter_training/features/weather/components/weather_icon_widget.dart';
 
 class WeatherTemperatureWidget extends StatelessWidget {
   const WeatherTemperatureWidget({super.key});

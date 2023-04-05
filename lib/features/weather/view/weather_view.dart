@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/ui/conponent/weather_item_widget.dart';
+import 'package:flutter_training/features/weather/components/weather_item_widget.dart';
 
 class WeatherView extends StatefulWidget {
   const WeatherView({super.key});
