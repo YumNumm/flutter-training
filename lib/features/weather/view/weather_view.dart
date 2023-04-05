@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
 
-class WeatherView extends StatefulWidget {
+class WeatherView extends StatelessWidget {
   const WeatherView({super.key});
 
-  @override
-  State<WeatherView> createState() => _WeatherViewState();
-}
-
-class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
     final body = Column(
