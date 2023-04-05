@@ -16,23 +16,30 @@ class WeatherCategoryWidget extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                '**°C',
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: Colors.blue,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: Text(
+                    '**°C',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: Colors.blue,
+                    ),
+                  ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                '**°C',
-                style: theme.textTheme.labelLarge?.copyWith(
-                  color: Colors.red,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: Text(
+                    '**°C',
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
               ),
             ),
