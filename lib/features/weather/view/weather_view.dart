@@ -11,25 +11,27 @@ class WeatherView extends StatefulWidget {
 class _WeatherViewState extends State<WeatherView> {
   @override
   Widget build(BuildContext context) {
+    final body = Column(
+      children: [
+        const Spacer(),
+        const WeatherTemperatureWidget(),
+        Flexible(
+          child: Column(
+            children: const [
+              SizedBox(height: 80),
+              _Buttons(),
+            ],
+          ),
+        ),
+      ],
+    );
+
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: FractionallySizedBox(
             widthFactor: 0.5,
-            child: Column(
-              children: [
-                const Spacer(),
-                const WeatherTemperatureWidget(),
-                Flexible(
-                  child: Column(
-                    children: const [
-                      SizedBox(height: 80),
-                      _Buttons(),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+            child: body,
           ),
         ),
       ),
