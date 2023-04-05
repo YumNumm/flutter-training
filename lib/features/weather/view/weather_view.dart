@@ -20,7 +20,7 @@ class _WeatherViewState extends State<WeatherView> {
               children: [
                 const Spacer(),
                 const WeatherTemperatureWidget(),
-                Expanded(
+                Flexible(
                   child: Column(
                     children: const [
                       SizedBox(height: 80),
