@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/ui/conponent/weather_view/weather_icon_widget.dart';
 
-class WeatherCategoryWidget extends StatelessWidget {
-  const WeatherCategoryWidget({super.key});
+class WeatherTemperatureWidget extends StatelessWidget {
+  const WeatherTemperatureWidget({super.key});
 
   // TODO(YumNumm): 天気・各種気温の表示
 

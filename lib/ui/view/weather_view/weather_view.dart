@@ -20,7 +20,7 @@ class _WeatherViewState extends State<WeatherView> {
             const Spacer(),
             const FractionallySizedBox(
               widthFactor: 0.5,
-              child: WeatherCategoryWidget(),
+              child: WeatherTemperatureWidget(),
             ),
             Expanded(
               child: Column(
