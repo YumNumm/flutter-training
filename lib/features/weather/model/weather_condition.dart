@@ -10,6 +10,4 @@ enum WeatherCondition {
       (e) => e.name == input,
     );
   }
-
-  String get svgImagePath => 'assets/images/$name.svg';
 }
