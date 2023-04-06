@@ -3,14 +3,14 @@ import 'package:flutter_training/features/weather/components/weather_temperature
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
-class WeatherView extends StatefulWidget {
-  const WeatherView({super.key});
+class WeatherScreen extends StatefulWidget {
+  const WeatherScreen({super.key});
 
   @override
-  State<WeatherView> createState() => _WeatherViewState();
+  State<WeatherScreen> createState() => _WeatherScreenState();
 }
 
-class _WeatherViewState extends State<WeatherView> {
+class _WeatherScreenState extends State<WeatherScreen> {
   WeatherCondition? weather;
 
   final yumemiWeather = YumemiWeather();
