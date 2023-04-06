@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_icon_widget.dart';
+import 'package:flutter_training/features/weather/model/weather_condition.dart';
 
 class WeatherTemperatureWidget extends StatelessWidget {
-  const WeatherTemperatureWidget({super.key});
+  const WeatherTemperatureWidget({
+    required this.weatherCondition,
+    super.key,
+  });
 
-  // TODO(YumNumm): 天気・各種気温の表示
+  final WeatherCondition? weatherCondition;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class WeatherTemperatureWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const WeatherIconWidget(),
+        WeatherIconWidget(weatherCondition: weatherCondition),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
