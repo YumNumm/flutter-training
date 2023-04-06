@@ -17,7 +17,7 @@ class WeatherTemperatureWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        WeatherIconWidget(weather: weather),
+        WeatherIconWidget(weatherCondition: weather),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,
