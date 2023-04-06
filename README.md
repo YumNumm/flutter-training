@@ -1,6 +1,6 @@
 # 株式会社ゆめみ 研修課題
 
-##  環境構築
+## 環境構築
 
 ```bash:install.sh
 # リポジトリをクローン
@@ -11,6 +11,11 @@ cd flutter-training
 brew tap leavjenn/tap
 brew install fvm
 fvm use
+
+
+# Lefthookをインストール(コミット時にフォーマットを実行するため)
+brew install lefthook
+lefthook install
 
 # パッケージをインストール
 fvm flutter pub get
