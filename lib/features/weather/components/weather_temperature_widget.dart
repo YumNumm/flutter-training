@@ -4,11 +4,11 @@ import 'package:flutter_training/features/weather/model/weather_condition.dart';
 
 class WeatherTemperatureWidget extends StatelessWidget {
   const WeatherTemperatureWidget({
-    required this.weather,
+    required this.weatherCondition,
     super.key,
   });
 
-  final WeatherCondition? weather;
+  final WeatherCondition? weatherCondition;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class WeatherTemperatureWidget extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        WeatherIconWidget(weatherCondition: weather),
+        WeatherIconWidget(weatherCondition: weatherCondition),
         Row(
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.alphabetic,

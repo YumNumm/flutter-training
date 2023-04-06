@@ -12,7 +12,7 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  WeatherCondition? weather;
+  WeatherCondition? weatherCondition ;
 
   final viewModel = WeatherViewModel(YumemiWeather());
 
@@ -22,7 +22,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       children: [
         const Spacer(),
         WeatherTemperatureWidget(
-          weather: weather,
+          weatherCondition: weatherCondition,
         ),
         Flexible(
           child: Column(
@@ -31,7 +31,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               _Buttons(
                 onReloadTap: () {
                   setState(() {
-                    weather = viewModel.fetchSimpleWeather();
+                    weatherCondition = viewModel.fetchSimpleWeather();
                   });
                 },
               ),
