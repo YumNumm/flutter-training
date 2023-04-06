@@ -11,23 +11,18 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    unawaited(
-      () async {
-        await Future<void>.delayed(
-          const Duration(milliseconds: 500),
-        );
-        if (context.mounted) {
-          const WeatherRoute().push(context);
-        }
-      }(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.endOfFrame.then((_) {
+      // 500ms後にSplashRouteに遷移する
+      Timer(const Duration(milliseconds: 500), () {
+        if (context.mounted &&
+            router.location != const WeatherRoute().location) {
+          const WeatherRoute().push(context);
+        }
+      });
+    });
     return const SizedBox.expand(
       child: ColoredBox(
         color: Colors.green,
