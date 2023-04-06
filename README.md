@@ -12,6 +12,11 @@ brew tap leavjenn/tap
 brew install fvm
 fvm use
 
+
+# Lefthookをインストール(コミット時にフォーマットを実行するため)
+brew install lefthook
+lefthook install
+
 # パッケージをインストール
 fvm flutter pub get
 ```
