@@ -1,20 +1,14 @@
+import 'package:collection/collection.dart';
+
 enum WeatherCondition {
   sunny,
   cloudy,
   rainy;
 
   static WeatherCondition? fromString(String input) {
-    switch (input) {
-      case 'sunny':
-        return WeatherCondition.sunny;
-      case 'cloudy':
-        return WeatherCondition.cloudy;
-      case 'rainy':
-        return WeatherCondition.rainy;
-      default:
-        return null;
-      // throw Exception('Unknown weather condition: $input');
-    }
+    return WeatherCondition.values.firstWhereOrNull(
+      (e) => e.name == input,
+    );
   }
 
   String get svgImagePath => 'assets/images/$name.svg';
