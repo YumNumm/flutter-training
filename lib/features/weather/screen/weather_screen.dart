@@ -12,7 +12,7 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
-  WeatherCondition? weatherCondition ;
+  WeatherCondition? weatherCondition;
 
   final viewModel = WeatherViewModel(YumemiWeather());
 
