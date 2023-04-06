@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_training/features/weather/model/weather_condition.dart';
 
 class WeatherIconWidget extends StatelessWidget {
-  const WeatherIconWidget({super.key});
+  const WeatherIconWidget({required this.weather, super.key});
+
+  final WeatherCondition? weather;
 
   @override
   Widget build(BuildContext context) {
-    return const AspectRatio(
+    return AspectRatio(
       aspectRatio: 1,
-      child: Placeholder(),
+      child: weather != null
+          ? SvgPicture.asset(weather!.svgImagePath)
+          : const Placeholder(),
     );
   }
 }
