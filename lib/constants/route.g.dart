@@ -8,6 +8,7 @@ part of 'route.dart';
 
 List<RouteBase> get $appRoutes => [
       $weatherRoute,
+      $homeRoute,
     ];
 
 RouteBase get $weatherRoute => GoRouteData.$route(
@@ -20,6 +21,26 @@ extension $WeatherRouteExtension on WeatherRoute {
 
   String get location => GoRouteData.$location(
         '/weather',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  void push(BuildContext context) => context.push(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+}
+
+RouteBase get $homeRoute => GoRouteData.$route(
+      path: '/',
+      factory: $HomeRouteExtension._fromState,
+    );
+
+extension $HomeRouteExtension on HomeRoute {
+  static HomeRoute _fromState(GoRouterState state) => const HomeRoute();
+
+  String get location => GoRouteData.$location(
+        '/',
       );
 
   void go(BuildContext context) => context.go(location);
