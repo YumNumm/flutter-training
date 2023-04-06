@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
+import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 
 class WeatherScreen extends StatefulWidget {
   const WeatherScreen({super.key});
@@ -13,7 +13,7 @@ class WeatherScreen extends StatefulWidget {
 class _WeatherScreenState extends State<WeatherScreen> {
   WeatherCondition? weather;
 
-  final yumemiWeather = YumemiWeather();
+  final viewModel = WeatherViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +29,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
               const SizedBox(height: 80),
               _Buttons(
                 onReloadTap: () {
-                  final res = yumemiWeather.fetchSimpleWeather();
                   setState(() {
-                    weather = WeatherCondition.fromString(res);
+                    weather = viewModel.fetchSimpleWeather();
                   });
                 },
               ),
