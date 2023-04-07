@@ -8,8 +8,8 @@ class WeatherViewModel {
 
   final YumemiWeather _yumemiWeather;
 
-  WeatherCondition? fetchSimpleWeather() {
-    final res = _yumemiWeather.fetchSimpleWeather();
+  WeatherCondition? fetchThrowsWeather() {
+    final res = _yumemiWeather.fetchThrowsWeather('Tokyo');
     return WeatherCondition.fromString(res);
   }
 }

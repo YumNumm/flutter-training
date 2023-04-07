@@ -32,7 +32,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
               _Buttons(
                 onReloadTap: () {
                   setState(() {
-                    weatherCondition = viewModel.fetchSimpleWeather();
+                    weatherCondition = viewModel.fetchThrowsWeather();
                   });
                 },
                 onCloseTap: context.pop,
