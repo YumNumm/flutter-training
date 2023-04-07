@@ -11,7 +11,7 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashState();
 }
 
-class _SplashState extends State<SplashScreen> with PerformAfterLayoutMinxin {
+class _SplashState extends State<SplashScreen> with PerformAfterLayoutMixin {
   /// WeatherScreenに遷移
   /// WeatherScreenからpopされたら、指定時間経過後 再度WeatherScreenに遷移
   Future<void> delayedTransitToWeatherScreenWithLoop() async {
@@ -27,7 +27,7 @@ class _SplashState extends State<SplashScreen> with PerformAfterLayoutMinxin {
   }
 
   @override
-  void afterFirstLayout() => delayedTransitToWeatherScreenWithLoop();
+  void afterLayout() => delayedTransitToWeatherScreenWithLoop();
 
   @override
   Widget build(BuildContext context) {
