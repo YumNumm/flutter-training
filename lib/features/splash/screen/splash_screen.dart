@@ -27,12 +27,9 @@ class _HomeScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(
-        const Duration(milliseconds: 500),
-        delayedTransitToWeatherScreenWithLoop,
-      );
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => delayedTransitToWeatherScreenWithLoop(),
+    );
     super.initState();
   }
 
