@@ -35,7 +35,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     weatherCondition = viewModel.fetchSimpleWeather();
                   });
                 },
-                onCloseTap: () => context.pop(),
+                onCloseTap: context.pop,
               ),
             ],
           ),

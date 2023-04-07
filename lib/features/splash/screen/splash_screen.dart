@@ -7,17 +7,17 @@ class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _HomeScreenState();
+  State<SplashScreen> createState() => _SplashState();
 }
 
-class _HomeScreenState extends State<SplashScreen> {
+class _SplashState extends State<SplashScreen> {
   /// WeatherScreenに遷移する
   /// WeatherScreenからpopされたら、指定時間経過後 再度WeatherScreenに遷移する
   Future<void> delayedTransitToWeatherScreenWithLoop() async {
     await Future<void>.delayed(
       const Duration(milliseconds: 500),
     );
-    if (context.mounted) {
+    if (mounted) {
       // WeatherScreenに遷移する
       await router.push(const WeatherRoute().location);
       // popしたので再度遷移する
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
+    WidgetsBinding.instance.endOfFrame.then(
       (_) => delayedTransitToWeatherScreenWithLoop(),
     );
     super.initState();
