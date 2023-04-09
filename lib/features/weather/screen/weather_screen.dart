@@ -30,11 +30,22 @@ class _WeatherScreenState extends State<WeatherScreen> {
             children: [
               const SizedBox(height: 80),
               _Buttons(
-                onReloadTap: () {
-                  setState(() {
-                    weatherCondition = viewModel.fetchThrowsWeather();
-                  });
-                },
+                onReloadTap: () => viewModel.fetchThrowsWeather().when(
+                  success: (value) {
+                    setState(() {
+                      weatherCondition = value;
+                    });
+                    return null;
+                  },
+                  failure: (e) {
+                    viewModel.showErrorDialog(
+                      context: context,
+                      title: 'エラーが発生しました',
+                      message: e.toString(),
+                    );
+                    return null;
+                  },
+                ),
                 onCloseTap: context.pop,
               ),
             ],
