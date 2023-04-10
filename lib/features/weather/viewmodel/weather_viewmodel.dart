@@ -31,8 +31,9 @@ class WeatherViewModel {
         case YumemiWeatherError.invalidParameter:
           return Result.failure(Exception('パラメータが不正です'));
       }
-    } on Exception catch (e) {
-      return Result.failure(e);
+    } on FormatException {
+      // jsonDecode() でエラーが発生した場合
+      return Result.failure(Exception('レスポンスのフォーマットが不正です'));
     }
   }
 }
