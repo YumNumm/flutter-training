@@ -35,7 +35,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                     setState(() {
                       weatherCondition = value;
                     });
-                    return null;
+                    return;
                   },
                   failure: (e) {
                     viewModel.showErrorDialog(
@@ -43,7 +43,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
                       title: 'エラーが発生しました',
                       message: e.toString(),
                     );
-                    return null;
+                    return;
                   },
                 ),
                 onCloseTap: context.pop,
