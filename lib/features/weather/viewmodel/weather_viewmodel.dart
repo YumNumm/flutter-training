@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
-import 'package:go_router/go_router.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherViewModel {
@@ -28,25 +26,4 @@ class WeatherViewModel {
       }
     }
   }
-
-  Future<void> showErrorDialog({
-    required BuildContext context,
-    required String title,
-    required String message,
-  }) =>
-      showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(message),
-            actions: [
-              TextButton(
-                onPressed: () => context.pop(),
-                child: const Text('Close'),
-              ),
-            ],
-          );
-        },
-      );
 }

@@ -31,21 +31,15 @@ class _WeatherScreenState extends State<WeatherScreen> {
               const SizedBox(height: 80),
               _Buttons(
                 onReloadTap: () => viewModel.fetchThrowsWeather().when(
-                  success: (value) {
-                    setState(() {
-                      weatherCondition = value;
-                    });
-                    return;
-                  },
-                  failure: (e) {
-                    viewModel.showErrorDialog(
-                      context: context,
-                      title: 'エラーが発生しました',
-                      message: e.toString(),
-                    );
-                    return;
-                  },
-                ),
+                      success: (value) => setState(() {
+                        weatherCondition = value;
+                      }),
+                      failure: (e) => showErrorDialog(
+                        context: context,
+                        title: 'エラーが発生しました',
+                        message: e.toString(),
+                      ),
+                    ),
                 onCloseTap: context.pop,
               ),
             ],
@@ -65,6 +59,27 @@ class _WeatherScreenState extends State<WeatherScreen> {
       ),
     );
   }
+
+  Future<void> showErrorDialog({
+    required BuildContext context,
+    required String title,
+    required String message,
+  }) =>
+      showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
 }
 
 class _Buttons extends StatelessWidget {
