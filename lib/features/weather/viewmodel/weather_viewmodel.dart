@@ -1,3 +1,4 @@
+import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
@@ -8,8 +9,21 @@ class WeatherViewModel {
 
   final YumemiWeather _yumemiWeather;
 
-  WeatherCondition? fetchSimpleWeather() {
-    final res = _yumemiWeather.fetchSimpleWeather();
-    return WeatherCondition.fromString(res);
+  Result<WeatherCondition, Exception> fetchThrowsWeather() {
+    try {
+      final res = _yumemiWeather.fetchThrowsWeather('Tokyo');
+      final weatherCondition = WeatherCondition.fromString(res);
+      if (weatherCondition == null) {
+        return Result.failure(Exception('天気の取得に失敗しました'));
+      }
+      return Result.success(weatherCondition);
+    } on YumemiWeatherError catch (e) {
+      switch (e) {
+        case YumemiWeatherError.unknown:
+          return Result.failure(Exception('不明なエラーが発生しました'));
+        case YumemiWeatherError.invalidParameter:
+          return Result.failure(Exception('パラメータが不正です'));
+      }
+    }
   }
 }
