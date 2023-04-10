@@ -16,7 +16,7 @@ class WeatherViewModel {
     try {
       final req = FetchWeatherRequest(
         area: 'Tokyo',
-        date: DateTime.now().toLocal(),
+        date: DateTime.now(),
       );
 
       final jsonResponse = _yumemiWeather.fetchWeather(jsonEncode(req));
