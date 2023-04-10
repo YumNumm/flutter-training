@@ -8,14 +8,27 @@ class FetchWeatherResponse {
     required this.minTemperature,
   });
 
-  factory FetchWeatherResponse.fromJson(Map<String, dynamic> json) =>
-      FetchWeatherResponse(
-        weatherCondition:
-            WeatherCondition.fromString(json['weather_condition'] as String)!,
-        date: DateTime.parse(json['date'] as String),
-        maxTemperature: json['max_temperature'] as int,
-        minTemperature: json['min_temperature'] as int,
-      );
+  factory FetchWeatherResponse.fromJson(Map<String, dynamic> json) {
+    final weatherCondition =
+        WeatherCondition.fromString(json['weather_condition'].toString());
+    final date = DateTime.tryParse(json['date'].toString());
+    final maxTempreture = int.tryParse(json['max_temperature'].toString());
+    final minTempreture = int.tryParse(json['min_temperature'].toString());
+
+    if (weatherCondition == null ||
+        date == null ||
+        maxTempreture == null ||
+        minTempreture == null) {
+      throw const FormatException('フォーマットが不正です');
+    }
+
+    return FetchWeatherResponse(
+      weatherCondition: weatherCondition,
+      date: date,
+      maxTemperature: maxTempreture,
+      minTemperature: minTempreture,
+    );
+  }
 
   final WeatherCondition weatherCondition;
   final DateTime date;
