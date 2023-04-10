@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training/features/weather/model/result.dart';
+import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:go_router/go_router.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
