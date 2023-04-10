@@ -14,6 +14,8 @@ class WeatherScreen extends StatefulWidget {
 
 class _WeatherScreenState extends State<WeatherScreen> {
   WeatherCondition? weatherCondition;
+  int? maxTempreture;
+  int? minTempreture;
 
   final viewModel = WeatherViewModel(YumemiWeather());
 
@@ -24,8 +26,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
         const Spacer(),
         WeatherTemperatureWidget(
           weatherCondition: weatherCondition,
-          maxTemperature: null,
-          minTemperature: null,
+          maxTemperature: maxTempreture,
+          minTemperature: minTempreture,
         ),
         Flexible(
           child: Column(
@@ -33,8 +35,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
               const SizedBox(height: 80),
               _Buttons(
                 onReloadTap: () => viewModel.fetchThrowsWeather().when(
-                      success: (value) => setState(() {
-                        weatherCondition = value;
+                      success: (res) => setState(() {
+                        weatherCondition = res.weatherCondition;
+                        maxTempreture = res.maxTemperature;
+                        minTempreture = res.minTemperature;
                       }),
                       failure: (e) => showErrorDialog(
                         context: context,
