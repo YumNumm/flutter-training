@@ -5,10 +5,14 @@ import 'package:flutter_training/features/weather/model/weather_condition.dart';
 class WeatherTemperatureWidget extends StatelessWidget {
   const WeatherTemperatureWidget({
     required this.weatherCondition,
+    required this.maxTemperature,
+    required this.minTemperature,
     super.key,
   });
 
   final WeatherCondition? weatherCondition;
+  final int? maxTemperature;
+  final int? minTemperature;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class WeatherTemperatureWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Center(
                   child: Text(
-                    '**°C',
+                    '${minTemperature ?? '**'}°C',
                     style: temperatureTextStyle?.copyWith(
                       color: Colors.blue,
                     ),
@@ -40,7 +44,7 @@ class WeatherTemperatureWidget extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 child: Center(
                   child: Text(
-                    '**°C',
+                    '${maxTemperature ?? '**'}°C',
                     style: temperatureTextStyle?.copyWith(
                       color: Colors.red,
                     ),

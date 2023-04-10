@@ -24,6 +24,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
         const Spacer(),
         WeatherTemperatureWidget(
           weatherCondition: weatherCondition,
+          maxTemperature: null,
+          minTemperature: null,
         ),
         Flexible(
           child: Column(
