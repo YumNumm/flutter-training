@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter_training/common/model/result.dart';
-import 'package:flutter_training/features/weather/model/weather_condition.dart';
+import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
+import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherViewModel {
@@ -9,14 +12,18 @@ class WeatherViewModel {
 
   final YumemiWeather _yumemiWeather;
 
-  Result<WeatherCondition, Exception> fetchThrowsWeather() {
+  Result<FetchWeatherResponse, Exception> fetchThrowsWeather() {
     try {
-      final res = _yumemiWeather.fetchThrowsWeather('Tokyo');
-      final weatherCondition = WeatherCondition.fromString(res);
-      if (weatherCondition == null) {
-        return Result.failure(Exception('天気の取得に失敗しました'));
-      }
-      return Result.success(weatherCondition);
+      final req = FetchWeatherRequest(
+        area: 'Tokyo',
+        date: DateTime.now(),
+      );
+
+      final jsonResponse = _yumemiWeather.fetchWeather(jsonEncode(req));
+      final weatherResponse = FetchWeatherResponse.fromJson(
+        jsonDecode(jsonResponse) as Map<String, dynamic>,
+      );
+      return Result.success(weatherResponse);
     } on YumemiWeatherError catch (e) {
       switch (e) {
         case YumemiWeatherError.unknown:
@@ -24,6 +31,9 @@ class WeatherViewModel {
         case YumemiWeatherError.invalidParameter:
           return Result.failure(Exception('パラメータが不正です'));
       }
+    } on FormatException {
+      // jsonDecode() でエラーが発生した場合
+      return Result.failure(Exception('レスポンスのフォーマットが不正です'));
     }
   }
 }
