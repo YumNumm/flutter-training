@@ -1,5 +1,7 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
+// ignore_for_file: type=lint
+
 part of 'fetch_weather_response.dart';
 
 // **************************************************************************
@@ -7,8 +9,7 @@ part of 'fetch_weather_response.dart';
 // **************************************************************************
 
 _$_FetchWeatherResponse _$$_FetchWeatherResponseFromJson(
-  Map<String, dynamic> json,
-) =>
+        Map<String, dynamic> json) =>
     _$_FetchWeatherResponse(
       weatherCondition:
           $enumDecode(_$WeatherConditionEnumMap, json['weather_condition']),
@@ -18,8 +19,7 @@ _$_FetchWeatherResponse _$$_FetchWeatherResponseFromJson(
     );
 
 Map<String, dynamic> _$$_FetchWeatherResponseToJson(
-  _$_FetchWeatherResponse instance,
-) =>
+        _$_FetchWeatherResponse instance) =>
     <String, dynamic>{
       'weather_condition':
           _$WeatherConditionEnumMap[instance.weatherCondition]!,
