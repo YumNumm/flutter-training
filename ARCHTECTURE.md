@@ -22,15 +22,19 @@ flowchart TB
   end
 
   App((App));
-  App ===> RouterProvider;
+  App ===> routerProvider;
+
+  weatherViewModel[[WeatherViewModel]];
 
   WeatherScreen((WeatherScreen));
-  WeatherScreen ===>  WeatherViewModel;
-  RouterProvider[[RouterProvider]];
+  WeatherScreen ===>  weatherViewModel;
+  routerProvider[[routerProvider]];
+  yumemiWeatherProvider[[yumemiWeatherProvider]];
+  weatherViewModel -..-> yumemiWeatherProvider;
 
   SplashScreen((SplashScreen));
 
-  SplashScreen -..->  RouterProvider;
-  WeatherScreen -..->  RouterProvider;
+  SplashScreen -..->  routerProvider;
+  WeatherScreen -..->  routerProvider;
 
 ```
