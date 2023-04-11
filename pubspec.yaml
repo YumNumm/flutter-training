@@ -16,6 +16,7 @@ dependencies:
   flutter_svg: ^2.0.4
   freezed_annotation: ^2.2.0
   go_router: ^6.5.5
+  json_annotation: ^4.8.0
   yumemi_weather:
     git:
       url: https://github.com/yumemi-inc/flutter-training-template.git
@@ -29,6 +30,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.3.2
   go_router_builder: ^1.2.0
+  json_serializable: ^6.6.1
 
 flutter:
   uses-material-design: true
