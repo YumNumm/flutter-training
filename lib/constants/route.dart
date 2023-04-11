@@ -22,8 +22,3 @@ class SplashRoute extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) =>
       const SplashScreen();
 }
-
-final router = GoRouter(
-  routes: $appRoutes,
-  initialLocation: const SplashRoute().location,
-);
