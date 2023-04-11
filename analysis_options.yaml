@@ -2,3 +2,14 @@ include: package:blendthink_lints/recommended.yaml
 
 linter:
   rules:
+
+analyzer:
+  exclude:
+    - "**/generated_plugin_registrant.dart"
+    - "**/build/**"
+    - "**/generated_*.dart"
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gr.dart"
+    - "**/l10n*.dart"
+    - "**/*.gen.dart"
