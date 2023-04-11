@@ -25,18 +25,30 @@ class WeatherViewModel extends _$WeatherViewModel {
     required DateTime date,
   }) {
     final yumemiWeather = ref.read(yumemiWeatherProvider);
-    final req = FetchWeatherRequest(
-      area: area,
-      date: date,
-    );
-    final jsonResponse = yumemiWeather.fetchWeather(jsonEncode(req));
-    final weatherResponse = FetchWeatherResponse.fromJson(
-      jsonDecode(jsonResponse) as Map<String, dynamic>,
-    );
-    state = state.copyWith(
-      weatherCondition: weatherResponse.weatherCondition,
-      maxTemperature: weatherResponse.maxTemperature,
-      minTemperature: weatherResponse.minTemperature,
-    );
+    try {
+      final req = FetchWeatherRequest(
+        area: area,
+        date: date,
+      );
+      final jsonResponse = yumemiWeather.fetchWeather(jsonEncode(req));
+      final weatherResponse = FetchWeatherResponse.fromJson(
+        jsonDecode(jsonResponse) as Map<String, dynamic>,
+      );
+      state = state.copyWith(
+        weatherCondition: weatherResponse.weatherCondition,
+        maxTemperature: weatherResponse.maxTemperature,
+        minTemperature: weatherResponse.minTemperature,
+      );
+    } on YumemiWeatherError catch (e) {
+      switch (e) {
+        case YumemiWeatherError.unknown:
+          throw Exception('不明なエラーが発生しました');
+        case YumemiWeatherError.invalidParameter:
+          throw Exception('パラメータが不正です');
+      }
+    } on FormatException {
+      // jsonDecode() でエラーが発生した場合
+      throw Exception('レスポンスのフォーマットが不正です');
+    }
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter_training/features/weather/components/weather_temperature
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
 
 class WeatherScreen extends ConsumerWidget {
   const WeatherScreen({super.key});
@@ -30,17 +29,11 @@ class WeatherScreen extends ConsumerWidget {
                           area: 'Tokyo',
                           date: DateTime.now(),
                         );
-                  } on YumemiWeatherError catch (e) {
+                  } on Exception catch (e) {
                     showErrorDialog(
                       context: context,
                       title: 'エラーが発生しました',
                       message: e.toString(),
-                    );
-                  } on FormatException {
-                    showErrorDialog(
-                      context: context,
-                      title: 'エラーが発生しました',
-                      message: 'データのフォーマットが不正です',
                     );
                   }
                 },
