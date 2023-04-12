@@ -12,6 +12,7 @@ class FetchWeatherResponse with _$FetchWeatherResponse {
     required int maxTemperature,
     required int minTemperature,
   }) = _FetchWeatherResponse;
+
   factory FetchWeatherResponse.fromJson(Map<String, dynamic> json) =>
       _$FetchWeatherResponseFromJson(json);
 }
