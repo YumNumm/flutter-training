@@ -1,14 +1,15 @@
-class FetchWeatherRequest {
-  FetchWeatherRequest({
-    required this.area,
-    required this.date,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  final String area;
-  final DateTime date;
+part 'fetch_weather_request.freezed.dart';
+part 'fetch_weather_request.g.dart';
 
-  Map<String, dynamic> toJson() => {
-        'area': area,
-        'date': date.toIso8601String(),
-      };
+@freezed
+class FetchWeatherRequest with _$FetchWeatherRequest {
+  const factory FetchWeatherRequest({
+    required String area,
+    required DateTime date,
+  }) = _FetchWeatherRequest;
+
+  factory FetchWeatherRequest.fromJson(Map<String, dynamic> json) =>
+      _$FetchWeatherRequestFromJson(json);
 }
