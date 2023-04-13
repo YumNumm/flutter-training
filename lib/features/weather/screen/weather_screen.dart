@@ -1,22 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
+import 'package:flutter_training/features/weather/viewmodel/weather_screen_state.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class WeatherScreen extends ConsumerWidget {
+class WeatherScreen extends HookConsumerWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(weatherViewModelProvider);
+    final state = ref.watch(weatherScreenStateProvider);
+
+    useEffect(
+      () {
+        ref.listen(weatherScreenStateProvider, (prev, next) {
+          next.maybeWhen(
+            failure: (e) {
+              showErrorDialog(
+                context: context,
+                title: 'エラーが発生しました',
+                message: e.toString(),
+              );
+            },
+            orElse: () {},
+          );
+        });
+
+        return null;
+      },
+      [],
+    );
+
     final body = Column(
       children: [
         const Spacer(),
-        WeatherTemperatureWidget(
-          weatherCondition: state.weatherCondition,
-          maxTemperature: state.maxTemperature,
-          minTemperature: state.minTemperature,
+        state.when(
+          success: (data) {
+            return WeatherTemperatureWidget(
+              weatherCondition: data.weatherCondition,
+              maxTemperature: data.maxTemperature,
+              minTemperature: data.minTemperature,
+            );
+          },
+          failure: (_) {
+            return const WeatherTemperatureWidget(
+              weatherCondition: null,
+              maxTemperature: null,
+              minTemperature: null,
+            );
+          },
         ),
         Flexible(
           child: Column(
@@ -24,18 +58,10 @@ class WeatherScreen extends ConsumerWidget {
               const SizedBox(height: 80),
               _Buttons(
                 onReloadTap: () {
-                  try {
-                    ref.read(weatherViewModelProvider.notifier).fetchWeather(
-                          area: 'Tokyo',
-                          date: DateTime.now(),
-                        );
-                  } on Exception catch (e) {
-                    showErrorDialog(
-                      context: context,
-                      title: 'エラーが発生しました',
-                      message: e.toString(),
-                    );
-                  }
+                  ref.read(weatherViewModelProvider).fetchWeather(
+                        area: 'Tokyo',
+                        date: DateTime.now(),
+                      );
                 },
                 onCloseTap: context.pop,
               ),

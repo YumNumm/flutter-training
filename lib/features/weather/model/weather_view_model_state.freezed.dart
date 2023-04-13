@@ -15,21 +15,21 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$WeatherViewModelState {
+mixin _$WeatherScreenState {
   WeatherCondition? get weatherCondition => throw _privateConstructorUsedError;
   int? get maxTemperature => throw _privateConstructorUsedError;
   int? get minTemperature => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $WeatherViewModelStateCopyWith<WeatherViewModelState> get copyWith =>
+  $WeatherScreenStateCopyWith<WeatherScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $WeatherViewModelStateCopyWith<$Res> {
-  factory $WeatherViewModelStateCopyWith(WeatherViewModelState value,
-          $Res Function(WeatherViewModelState) then) =
-      _$WeatherViewModelStateCopyWithImpl<$Res, WeatherViewModelState>;
+abstract class $WeatherScreenStateCopyWith<$Res> {
+  factory $WeatherScreenStateCopyWith(
+          WeatherScreenState value, $Res Function(WeatherScreenState) then) =
+      _$WeatherScreenStateCopyWithImpl<$Res, WeatherScreenState>;
   @useResult
   $Res call(
       {WeatherCondition? weatherCondition,
@@ -38,10 +38,9 @@ abstract class $WeatherViewModelStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$WeatherViewModelStateCopyWithImpl<$Res,
-        $Val extends WeatherViewModelState>
-    implements $WeatherViewModelStateCopyWith<$Res> {
-  _$WeatherViewModelStateCopyWithImpl(this._value, this._then);
+class _$WeatherScreenStateCopyWithImpl<$Res, $Val extends WeatherScreenState>
+    implements $WeatherScreenStateCopyWith<$Res> {
+  _$WeatherScreenStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -73,11 +72,11 @@ class _$WeatherViewModelStateCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$_WeatherViewModelStateCopyWith<$Res>
-    implements $WeatherViewModelStateCopyWith<$Res> {
-  factory _$$_WeatherViewModelStateCopyWith(_$_WeatherViewModelState value,
-          $Res Function(_$_WeatherViewModelState) then) =
-      __$$_WeatherViewModelStateCopyWithImpl<$Res>;
+abstract class _$$_WeatherScreenStateCopyWith<$Res>
+    implements $WeatherScreenStateCopyWith<$Res> {
+  factory _$$_WeatherScreenStateCopyWith(_$_WeatherScreenState value,
+          $Res Function(_$_WeatherScreenState) then) =
+      __$$_WeatherScreenStateCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -87,11 +86,11 @@ abstract class _$$_WeatherViewModelStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_WeatherViewModelStateCopyWithImpl<$Res>
-    extends _$WeatherViewModelStateCopyWithImpl<$Res, _$_WeatherViewModelState>
-    implements _$$_WeatherViewModelStateCopyWith<$Res> {
-  __$$_WeatherViewModelStateCopyWithImpl(_$_WeatherViewModelState _value,
-      $Res Function(_$_WeatherViewModelState) _then)
+class __$$_WeatherScreenStateCopyWithImpl<$Res>
+    extends _$WeatherScreenStateCopyWithImpl<$Res, _$_WeatherScreenState>
+    implements _$$_WeatherScreenStateCopyWith<$Res> {
+  __$$_WeatherScreenStateCopyWithImpl(
+      _$_WeatherScreenState _value, $Res Function(_$_WeatherScreenState) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -101,7 +100,7 @@ class __$$_WeatherViewModelStateCopyWithImpl<$Res>
     Object? maxTemperature = freezed,
     Object? minTemperature = freezed,
   }) {
-    return _then(_$_WeatherViewModelState(
+    return _then(_$_WeatherScreenState(
       weatherCondition: freezed == weatherCondition
           ? _value.weatherCondition
           : weatherCondition // ignore: cast_nullable_to_non_nullable
@@ -120,8 +119,8 @@ class __$$_WeatherViewModelStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_WeatherViewModelState implements _WeatherViewModelState {
-  const _$_WeatherViewModelState(
+class _$_WeatherScreenState implements _WeatherScreenState {
+  const _$_WeatherScreenState(
       {required this.weatherCondition,
       required this.maxTemperature,
       required this.minTemperature});
@@ -135,14 +134,14 @@ class _$_WeatherViewModelState implements _WeatherViewModelState {
 
   @override
   String toString() {
-    return 'WeatherViewModelState(weatherCondition: $weatherCondition, maxTemperature: $maxTemperature, minTemperature: $minTemperature)';
+    return 'WeatherScreenState(weatherCondition: $weatherCondition, maxTemperature: $maxTemperature, minTemperature: $minTemperature)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_WeatherViewModelState &&
+            other is _$_WeatherScreenState &&
             (identical(other.weatherCondition, weatherCondition) ||
                 other.weatherCondition == weatherCondition) &&
             (identical(other.maxTemperature, maxTemperature) ||
@@ -158,16 +157,16 @@ class _$_WeatherViewModelState implements _WeatherViewModelState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_WeatherViewModelStateCopyWith<_$_WeatherViewModelState> get copyWith =>
-      __$$_WeatherViewModelStateCopyWithImpl<_$_WeatherViewModelState>(
+  _$$_WeatherScreenStateCopyWith<_$_WeatherScreenState> get copyWith =>
+      __$$_WeatherScreenStateCopyWithImpl<_$_WeatherScreenState>(
           this, _$identity);
 }
 
-abstract class _WeatherViewModelState implements WeatherViewModelState {
-  const factory _WeatherViewModelState(
+abstract class _WeatherScreenState implements WeatherScreenState {
+  const factory _WeatherScreenState(
       {required final WeatherCondition? weatherCondition,
       required final int? maxTemperature,
-      required final int? minTemperature}) = _$_WeatherViewModelState;
+      required final int? minTemperature}) = _$_WeatherScreenState;
 
   @override
   WeatherCondition? get weatherCondition;
@@ -177,6 +176,6 @@ abstract class _WeatherViewModelState implements WeatherViewModelState {
   int? get minTemperature;
   @override
   @JsonKey(ignore: true)
-  _$$_WeatherViewModelStateCopyWith<_$_WeatherViewModelState> get copyWith =>
+  _$$_WeatherScreenStateCopyWith<_$_WeatherScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
