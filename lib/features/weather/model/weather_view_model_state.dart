@@ -4,10 +4,10 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'weather_view_model_state.freezed.dart';
 
 @freezed
-class WeatherScreenState with _$WeatherScreenState {
-  const factory WeatherScreenState({
+class WeatherViewModelState with _$WeatherViewModelState {
+  const factory WeatherViewModelState({
     required WeatherCondition? weatherCondition,
     required int? maxTemperature,
     required int? minTemperature,
-  }) = _WeatherScreenState;
+  }) = _WeatherViewModelState;
 }
