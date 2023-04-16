@@ -14,11 +14,7 @@ YumemiWeather yumemiWeather(YumemiWeatherRef ref) => YumemiWeather();
 @riverpod
 class WeatherViewModel extends _$WeatherViewModel {
   @override
-  WeatherViewModelState build() => const WeatherViewModelState(
-        weatherCondition: null,
-        maxTemperature: null,
-        minTemperature: null,
-      );
+  WeatherViewModelState build() => const WeatherViewModelState();
 
   void fetchWeather({
     required String area,

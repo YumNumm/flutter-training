@@ -122,9 +122,7 @@ class __$$_WeatherViewModelStateCopyWithImpl<$Res>
 
 class _$_WeatherViewModelState implements _WeatherViewModelState {
   const _$_WeatherViewModelState(
-      {required this.weatherCondition,
-      required this.maxTemperature,
-      required this.minTemperature});
+      {this.weatherCondition, this.maxTemperature, this.minTemperature});
 
   @override
   final WeatherCondition? weatherCondition;
@@ -165,9 +163,9 @@ class _$_WeatherViewModelState implements _WeatherViewModelState {
 
 abstract class _WeatherViewModelState implements WeatherViewModelState {
   const factory _WeatherViewModelState(
-      {required final WeatherCondition? weatherCondition,
-      required final int? maxTemperature,
-      required final int? minTemperature}) = _$_WeatherViewModelState;
+      {final WeatherCondition? weatherCondition,
+      final int? maxTemperature,
+      final int? minTemperature}) = _$_WeatherViewModelState;
 
   @override
   WeatherCondition? get weatherCondition;

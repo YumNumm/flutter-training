@@ -6,8 +6,8 @@ part 'weather_view_model_state.freezed.dart';
 @freezed
 class WeatherViewModelState with _$WeatherViewModelState {
   const factory WeatherViewModelState({
-    required WeatherCondition? weatherCondition,
-    required int? maxTemperature,
-    required int? minTemperature,
+    WeatherCondition? weatherCondition,
+    int? maxTemperature,
+    int? minTemperature,
   }) = _WeatherViewModelState;
 }

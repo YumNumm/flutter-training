@@ -23,7 +23,7 @@ final yumemiWeatherProvider = Provider<YumemiWeather>.internal(
 );
 
 typedef YumemiWeatherRef = ProviderRef<YumemiWeather>;
-String _$weatherViewModelHash() => r'f6d2d28319330bf11754e3027ad1258adf34e59c';
+String _$weatherViewModelHash() => r'85a5b06b0f6a4640c6740fde2064a5867a1e2e56';
 
 /// See also [WeatherViewModel].
 @ProviderFor(WeatherViewModel)
