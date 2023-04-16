@@ -1,51 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
-import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:go_router/go_router.dart';
-import 'package:yumemi_weather/yumemi_weather.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class WeatherScreen extends StatefulWidget {
+class WeatherScreen extends ConsumerWidget {
   const WeatherScreen({super.key});
 
   @override
-  State<WeatherScreen> createState() => _WeatherScreenState();
-}
-
-class _WeatherScreenState extends State<WeatherScreen> {
-  WeatherCondition? weatherCondition;
-  int? maxTempreture;
-  int? minTempreture;
-
-  final viewModel = WeatherViewModel(YumemiWeather());
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(weatherViewModelProvider);
     final body = Column(
       children: [
         const Spacer(),
         WeatherTemperatureWidget(
-          weatherCondition: weatherCondition,
-          maxTemperature: maxTempreture,
-          minTemperature: minTempreture,
+          weatherCondition: state.weatherCondition,
+          maxTemperature: state.maxTemperature,
+          minTemperature: state.minTemperature,
         ),
         Flexible(
           child: Column(
             children: [
               const SizedBox(height: 80),
               _Buttons(
-                onReloadTap: () => viewModel.fetchThrowsWeather().when(
-                      success: (res) => setState(() {
-                        weatherCondition = res.weatherCondition;
-                        maxTempreture = res.maxTemperature;
-                        minTempreture = res.minTemperature;
-                      }),
-                      failure: (e) => showErrorDialog(
-                        context: context,
-                        title: 'エラーが発生しました',
-                        message: e.toString(),
-                      ),
-                    ),
+                onReloadTap: () {
+                  try {
+                    ref.read(weatherViewModelProvider.notifier).fetchWeather(
+                          area: 'Tokyo',
+                          date: DateTime.now(),
+                        );
+                  } on Exception catch (e) {
+                    showErrorDialog(
+                      context: context,
+                      title: 'エラーが発生しました',
+                      message: e.toString(),
+                    );
+                  }
+                },
                 onCloseTap: context.pop,
               ),
             ],
