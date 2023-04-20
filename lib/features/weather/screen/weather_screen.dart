@@ -4,19 +4,43 @@ import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.da
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class WeatherScreen extends ConsumerWidget {
+class WeatherScreen extends HookConsumerWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(weatherViewModelProvider);
+    ref.listen(weatherViewModelProvider, (_, next) {
+      next.maybeWhen(
+        failure: (e) {
+          showErrorDialog(
+            context: context,
+            title: 'エラーが発生しました',
+            message: e.toString(),
+          );
+        },
+        orElse: () {},
+      );
+    });
+
     final body = Column(
       children: [
         const Spacer(),
-        WeatherTemperatureWidget(
-          weatherCondition: state.weatherCondition,
-          maxTemperature: state.maxTemperature,
-          minTemperature: state.minTemperature,
+        state.when(
+          success: (data) {
+            return WeatherTemperatureWidget(
+              weatherCondition: data.weatherCondition,
+              maxTemperature: data.maxTemperature,
+              minTemperature: data.minTemperature,
+            );
+          },
+          failure: (_) {
+            return const WeatherTemperatureWidget(
+              weatherCondition: null,
+              maxTemperature: null,
+              minTemperature: null,
+            );
+          },
         ),
         Flexible(
           child: Column(
