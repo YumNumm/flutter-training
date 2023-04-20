@@ -10,17 +10,18 @@ class WeatherScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(weatherViewModelProvider);
-    ref.listen(weatherViewModelProvider, (_, next) {
-      next.maybeWhen(
-        failure: (e) {
-          showErrorDialog(
-            context: context,
-            title: 'エラーが発生しました',
-            message: e.toString(),
-          );
-        },
-        orElse: () {},
+    ref.listen(weatherViewModelProvider.select((value) => value.errorOrNull),
+        (_, error) async {
+      if (error == null) {
+        return;
+      }
+      await showErrorDialog(
+        context: context,
+        title: 'エラーが発生しました',
+        message: error.toString(),
       );
+      // 状態をリセットする
+      ref.read(weatherViewModelProvider.notifier).build();
     });
 
     final body = Column(

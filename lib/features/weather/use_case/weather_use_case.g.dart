@@ -9,7 +9,7 @@ part of 'weather_use_case.dart';
 // **************************************************************************
 
 String _$fetchWeatherUseCaseHash() =>
-    r'9d53730e535f6bbd977fe898c5f3d3d92e19b377';
+    r'7fa7e469dcdb7fc5ea04fe105a0d05917a72c197';
 
 /// See also [fetchWeatherUseCase].
 @ProviderFor(fetchWeatherUseCase)
