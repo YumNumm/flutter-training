@@ -48,20 +48,11 @@ class WeatherScreen extends HookConsumerWidget {
             children: [
               const SizedBox(height: 80),
               _Buttons(
-                onReloadTap: () {
-                  try {
+                onReloadTap: () =>
                     ref.read(weatherViewModelProvider.notifier).fetchWeather(
                           area: 'Tokyo',
                           date: DateTime.now(),
-                        );
-                  } on Exception catch (e) {
-                    showErrorDialog(
-                      context: context,
-                      title: 'エラーが発生しました',
-                      message: e.toString(),
-                    );
-                  }
-                },
+                        ),
                 onCloseTap: context.pop,
               ),
             ],
