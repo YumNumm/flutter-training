@@ -9,3 +9,11 @@ pre-commit:
     analyzer:
       glob: "*.dart"
       run: fvm dart analyze --fatal-infos --fatal-warnings lib
+
+pre-push:
+  parallel: true
+  commands:
+    tests:
+      run: flutter test
+    linter:
+      run: flutter analyze
