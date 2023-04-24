@@ -26,15 +26,15 @@ class WeatherViewModel extends _$WeatherViewModel {
       date: date,
     );
     final useCase = ref.read(fetchWeatherUseCaseProvider);
-    useCase(req).when(
-      success: (data) => state = Result.success(
+    state = useCase(req).when(
+      success: (data) => Result.success(
         WeatherViewModelState(
           weatherCondition: data.weatherCondition,
           minTemperature: data.minTemperature,
           maxTemperature: data.maxTemperature,
         ),
       ),
-      failure: (e) => state = Result.failure(e),
+      failure: Result.failure,
     );
   }
 }
