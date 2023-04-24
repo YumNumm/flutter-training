@@ -10,12 +10,24 @@ part of 'fetch_weather_response.dart';
 
 _$_FetchWeatherResponse _$$_FetchWeatherResponseFromJson(
         Map<String, dynamic> json) =>
-    _$_FetchWeatherResponse(
-      weatherCondition:
-          $enumDecode(_$WeatherConditionEnumMap, json['weather_condition']),
-      date: DateTime.parse(json['date'] as String),
-      maxTemperature: json['max_temperature'] as int,
-      minTemperature: json['min_temperature'] as int,
+    $checkedCreate(
+      r'_$_FetchWeatherResponse',
+      json,
+      ($checkedConvert) {
+        final val = _$_FetchWeatherResponse(
+          weatherCondition: $checkedConvert('weather_condition',
+              (v) => $enumDecode(_$WeatherConditionEnumMap, v)),
+          date: $checkedConvert('date', (v) => DateTime.parse(v as String)),
+          maxTemperature: $checkedConvert('max_temperature', (v) => v as int),
+          minTemperature: $checkedConvert('min_temperature', (v) => v as int),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'weatherCondition': 'weather_condition',
+        'maxTemperature': 'max_temperature',
+        'minTemperature': 'min_temperature'
+      },
     );
 
 Map<String, dynamic> _$$_FetchWeatherResponseToJson(

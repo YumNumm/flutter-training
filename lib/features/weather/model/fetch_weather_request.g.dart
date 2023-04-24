@@ -10,9 +10,16 @@ part of 'fetch_weather_request.dart';
 
 _$_FetchWeatherRequest _$$_FetchWeatherRequestFromJson(
         Map<String, dynamic> json) =>
-    _$_FetchWeatherRequest(
-      area: json['area'] as String,
-      date: DateTime.parse(json['date'] as String),
+    $checkedCreate(
+      r'_$_FetchWeatherRequest',
+      json,
+      ($checkedConvert) {
+        final val = _$_FetchWeatherRequest(
+          area: $checkedConvert('area', (v) => v as String),
+          date: $checkedConvert('date', (v) => DateTime.parse(v as String)),
+        );
+        return val;
+      },
     );
 
 Map<String, dynamic> _$$_FetchWeatherRequestToJson(
