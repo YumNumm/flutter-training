@@ -4,39 +4,55 @@ import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.da
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class WeatherScreen extends ConsumerWidget {
+class WeatherScreen extends HookConsumerWidget {
   const WeatherScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(weatherViewModelProvider);
+    ref.listen(weatherViewModelProvider.select((value) => value.errorOrNull),
+        (_, error) async {
+      if (error == null) {
+        return;
+      }
+      await showErrorDialog(
+        context: context,
+        title: 'エラーが発生しました',
+        message: error.toString(),
+      );
+      // 状態をリセットする
+      ref.invalidate(weatherViewModelProvider);
+    });
+
     final body = Column(
       children: [
         const Spacer(),
-        WeatherTemperatureWidget(
-          weatherCondition: state.weatherCondition,
-          maxTemperature: state.maxTemperature,
-          minTemperature: state.minTemperature,
+        state.when(
+          success: (data) {
+            return WeatherTemperatureWidget(
+              weatherCondition: data.weatherCondition,
+              maxTemperature: data.maxTemperature,
+              minTemperature: data.minTemperature,
+            );
+          },
+          failure: (_) {
+            return const WeatherTemperatureWidget(
+              weatherCondition: null,
+              maxTemperature: null,
+              minTemperature: null,
+            );
+          },
         ),
         Flexible(
           child: Column(
             children: [
               const SizedBox(height: 80),
               _Buttons(
-                onReloadTap: () {
-                  try {
+                onReloadTap: () =>
                     ref.read(weatherViewModelProvider.notifier).fetchWeather(
                           area: 'Tokyo',
                           date: DateTime.now(),
-                        );
-                  } on Exception catch (e) {
-                    showErrorDialog(
-                      context: context,
-                      title: 'エラーが発生しました',
-                      message: e.toString(),
-                    );
-                  }
-                },
+                        ),
                 onCloseTap: context.pop,
               ),
             ],

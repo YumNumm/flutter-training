@@ -2,7 +2,7 @@
 
 // ignore_for_file: type=lint
 
-part of 'weather_viewmodel.dart';
+part of 'weather_data_source.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -23,21 +23,19 @@ final yumemiWeatherProvider = Provider<YumemiWeather>.internal(
 );
 
 typedef YumemiWeatherRef = ProviderRef<YumemiWeather>;
-String _$weatherViewModelHash() => r'695310f9b33830b57f60434c15460dcbe4e13973';
+String _$weatherDataSourceHash() => r'f9d670ebdae42a032fe7f7dc1b07addece9f52e8';
 
-/// See also [WeatherViewModel].
-@ProviderFor(WeatherViewModel)
-final weatherViewModelProvider = AutoDisposeNotifierProvider<WeatherViewModel,
-    Result<WeatherViewModelState, Exception>>.internal(
-  WeatherViewModel.new,
-  name: r'weatherViewModelProvider',
+/// See also [weatherDataSource].
+@ProviderFor(weatherDataSource)
+final weatherDataSourceProvider = Provider<WeatherDataSource>.internal(
+  weatherDataSource,
+  name: r'weatherDataSourceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$weatherViewModelHash,
+      : _$weatherDataSourceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$WeatherViewModel
-    = AutoDisposeNotifier<Result<WeatherViewModelState, Exception>>;
+typedef WeatherDataSourceRef = ProviderRef<WeatherDataSource>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

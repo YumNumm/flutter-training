@@ -107,8 +107,8 @@ class __$$SuccessCopyWithImpl<T, R, $Res>
 
 /// @nodoc
 
-class _$Success<T, R> implements Success<T, R> {
-  const _$Success(this.value);
+class _$Success<T, R> extends Success<T, R> {
+  const _$Success(this.value) : super._();
 
   @override
   final T value;
@@ -199,8 +199,9 @@ class _$Success<T, R> implements Success<T, R> {
   }
 }
 
-abstract class Success<T, R> implements Result<T, R> {
+abstract class Success<T, R> extends Result<T, R> {
   const factory Success(final T value) = _$Success<T, R>;
+  const Success._() : super._();
 
   T get value;
   @JsonKey(ignore: true)
@@ -241,8 +242,8 @@ class __$$FailureCopyWithImpl<T, R, $Res>
 
 /// @nodoc
 
-class _$Failure<T, R> implements Failure<T, R> {
-  const _$Failure(this.error);
+class _$Failure<T, R> extends Failure<T, R> {
+  const _$Failure(this.error) : super._();
 
   @override
   final R error;
@@ -333,8 +334,9 @@ class _$Failure<T, R> implements Failure<T, R> {
   }
 }
 
-abstract class Failure<T, R> implements Result<T, R> {
+abstract class Failure<T, R> extends Result<T, R> {
   const factory Failure(final R error) = _$Failure<T, R>;
+  const Failure._() : super._();
 
   R get error;
   @JsonKey(ignore: true)
