@@ -17,11 +17,11 @@ WeatherDataSource weatherDataSource(WeatherDataSourceRef ref) =>
     );
 
 class WeatherDataSource {
-  WeatherDataSource(this.yumemiWeather);
-  final YumemiWeather yumemiWeather;
+  WeatherDataSource(this._yumemiWeather);
+  final YumemiWeather _yumemiWeather;
 
   FetchWeatherResponse fetchWeather(FetchWeatherRequest request) {
-    final jsonResponse = yumemiWeather.fetchWeather(jsonEncode(request));
+    final jsonResponse = _yumemiWeather.fetchWeather(jsonEncode(request));
     final weatherResponse = FetchWeatherResponse.fromJson(
       jsonDecode(jsonResponse) as Map<String, dynamic>,
     );
