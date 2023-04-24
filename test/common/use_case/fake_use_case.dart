@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_training/common/use_case/use_case.dart';
 
 /// UseCaseのテスト用のダミークラス
@@ -19,7 +18,6 @@ import 'package:flutter_training/common/use_case/use_case.dart';
 /// }
 ///
 /// ```
-@visibleForTesting
 class FakeUseCase<Param, Result> extends UseCase<Param, Result> {
   late final Result Function(Param)? _callback;
 
