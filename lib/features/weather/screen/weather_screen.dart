@@ -21,7 +21,7 @@ class WeatherScreen extends HookConsumerWidget {
         message: error.toString(),
       );
       // 状態をリセットする
-      ref.read(weatherViewModelProvider.notifier).build();
+      ref.invalidate(weatherViewModelProvider);
     });
 
     final body = Column(
