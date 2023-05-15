@@ -1,5 +1,6 @@
 import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
+import 'package:flutter_training/features/weather/model/weather_error_type.dart';
 import 'package:flutter_training/features/weather/model/weather_view_model_state.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -13,7 +14,8 @@ YumemiWeather yumemiWeather(YumemiWeatherRef ref) => YumemiWeather();
 @riverpod
 class WeatherViewModel extends _$WeatherViewModel {
   @override
-  Result<WeatherViewModelState, Exception> build() => const Result.success(
+  Result<WeatherViewModelState, WeatherErrorType> build() =>
+      const Result.success(
         WeatherViewModelState(),
       );
 

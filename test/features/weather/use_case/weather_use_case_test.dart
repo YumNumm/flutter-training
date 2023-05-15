@@ -9,6 +9,7 @@ import 'package:flutter_training/features/weather/data/weather_data_source.dart'
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
+import 'package:flutter_training/features/weather/model/weather_error_type.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -44,7 +45,9 @@ void main() {
 
           expect(
             actualResponse,
-            Result<FetchWeatherResponse, Exception>.success(expectedResponse),
+            Result<FetchWeatherResponse, WeatherErrorType>.success(
+              expectedResponse,
+            ),
           );
         },
       );
@@ -56,6 +59,10 @@ void main() {
           when(dataSource.fetchWeather(any)).thenThrow(
             YumemiWeatherError.unknown,
           );
+          const expectedResponse =
+              Result<FetchWeatherResponse, WeatherErrorType>.failure(
+            WeatherErrorType.unknown,
+          );
           // Act
           final actualResponse = useCase(
             FetchWeatherRequest(
@@ -65,8 +72,8 @@ void main() {
           );
           // Assert
           expect(
-            actualResponse.errorOrNull,
-            isA<Exception>(),
+            actualResponse,
+            expectedResponse,
           );
         },
       );

@@ -3,6 +3,7 @@ import 'package:flutter_training/common/use_case/use_case.dart';
 import 'package:flutter_training/features/weather/data/weather_data_source.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
+import 'package:flutter_training/features/weather/model/weather_error_type.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
@@ -15,24 +16,26 @@ FetchWeatherUseCase fetchWeatherUseCase(FetchWeatherUseCaseRef ref) =>
     );
 
 class FetchWeatherUseCase extends UseCase<FetchWeatherRequest,
-    Result<FetchWeatherResponse, Exception>> {
+    Result<FetchWeatherResponse, WeatherErrorType>> {
   FetchWeatherUseCase(this._dataSource);
   final WeatherDataSource _dataSource;
 
   @override
-  Result<FetchWeatherResponse, Exception> call(FetchWeatherRequest param) {
+  Result<FetchWeatherResponse, WeatherErrorType> call(
+    FetchWeatherRequest param,
+  ) {
     try {
       return Result.success(_dataSource.fetchWeather(param));
     } on YumemiWeatherError catch (e) {
       switch (e) {
         case YumemiWeatherError.unknown:
-          return Result.failure(Exception('不明なエラーが発生しました'));
+          return const Result.failure(WeatherErrorType.unknown);
         case YumemiWeatherError.invalidParameter:
-          return Result.failure(Exception('パラメータが不正です'));
+          return const Result.failure(WeatherErrorType.invalidParameter);
       }
     } on FormatException {
       // jsonDecode() でエラーが発生した場合
-      return Result.failure(Exception('レスポンスのフォーマットが不正です'));
+      return const Result.failure(WeatherErrorType.invalidResponse);
     }
   }
 }
