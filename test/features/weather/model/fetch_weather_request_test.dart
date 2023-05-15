@@ -7,14 +7,14 @@ void main() {
     () {
       // Arrange
       const json = <String, dynamic>{
-        'area': '東京',
-        'date': '2021-01-01',
+        'area': 'London',
+        'date': '2000-01-01',
       };
       // Act
       final actual = FetchWeatherRequest.fromJson(json);
       // Assert
-      expect(actual.area, '東京');
-      expect(actual.date, DateTime(2021));
+      expect(actual.area, 'London');
+      expect(actual.date, DateTime(2000));
     },
   );
 }

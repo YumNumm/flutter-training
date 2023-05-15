@@ -49,6 +49,7 @@ void main() {
         () {
           // Arrange
           const json = <String, dynamic>{
+            // 'weather_condition': 'sunny',
             'date': '2000-01-01',
             'max_temperature': 10,
             'min_temperature': 5,
@@ -69,6 +70,7 @@ void main() {
           // Arrange
           const json = <String, dynamic>{
             'weather_condition': 'sunny',
+            // 'date': '2000-01-01',
             'max_temperature': 10,
             'min_temperature': 5,
           };
@@ -89,6 +91,7 @@ void main() {
           const json = <String, dynamic>{
             'weather_condition': 'sunny',
             'date': '2000-01-01',
+            // 'max_temperature': 10,
             'min_temperature': 5,
           };
           // Act
@@ -109,6 +112,7 @@ void main() {
             'weather_condition': 'sunny',
             'date': '2000-01-01',
             'max_temperature': 10,
+            // 'min_temperature': 5,
           };
           // Act
           FetchWeatherResponse act() => FetchWeatherResponse.fromJson(json);
