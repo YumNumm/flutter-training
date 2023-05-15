@@ -1,20 +1,30 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
 
+import 'fetch_weather_request_fixture.dart';
+
 void main() {
-  test(
-    '正しいJSONファイルからインスタンスが生成される',
-    () {
-      // Arrange
-      const json = <String, dynamic>{
-        'area': 'London',
-        'date': '2000-01-01',
-      };
-      // Act
-      final actual = FetchWeatherRequest.fromJson(json);
-      // Assert
-      expect(actual.area, 'London');
-      expect(actual.date, DateTime(2000));
-    },
-  );
+  group('FetchWeatherRequest', () {
+    test('fromJson', () {
+      final requestWithJsons =
+          FetchWeatherRequestFixture.factory.makeManyWithJsonArray(100);
+
+      for (final request in requestWithJsons) {
+        final actual = FetchWeatherRequest.fromJson(request.json);
+        final expected = request.object;
+        expect(actual, expected);
+      }
+    });
+
+    test('toJson', () {
+      final requestWithJsons =
+          FetchWeatherRequestFixture.factory.makeManyWithJsonArray(100);
+
+      for (final request in requestWithJsons) {
+        final actual = request.object.toJson();
+        final expected = request.json;
+        expect(actual, expected);
+      }
+    });
+  });
 }

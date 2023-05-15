@@ -1,30 +1,37 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
-import 'package:flutter_training/features/weather/model/weather_condition.dart';
+
+import 'fetch_weather_response_fixture.dart';
 
 void main() {
   group(
     'FetchWeatherResponse',
     () {
       test(
-        '正しいJSONファイルからインスタンスが生成される',
+        'fromJson',
         () {
-          // Arrange
-          const json = <String, dynamic>{
-            'weather_condition': 'sunny',
-            'date': '2021-01-01',
-            'max_temperature': 10,
-            'min_temperature': 5,
-          };
-          // Act
-          final actual = FetchWeatherResponse.fromJson(json);
-          // Assert
-          expect(actual.weatherCondition, WeatherCondition.sunny);
-          expect(actual.date, DateTime(2021));
-          expect(actual.maxTemperature, 10);
-          expect(actual.minTemperature, 5);
+          final responseWithJsons =
+              FetchWeatherResponseFixture.factory.makeManyWithJsonArray(100);
+          for (final response in responseWithJsons) {
+            final actual = FetchWeatherResponse.fromJson(response.json);
+            final expected = response.object;
+            expect(actual, expected);
+          }
         },
       );
+      test(
+        'toJson',
+        () {
+          final responseWithJsons =
+              FetchWeatherResponseFixture.factory.makeManyWithJsonArray(100);
+          for (final response in responseWithJsons) {
+            final actual = response.object.toJson();
+            final expected = response.json;
+            expect(actual, expected);
+          }
+        },
+      );
+
       test(
         'WeatherConditionが存在しなかった場合',
         () {

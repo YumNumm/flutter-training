@@ -5,7 +5,7 @@ import 'package:flutter_training/features/weather/model/fetch_weather_request.da
 
 extension FetchWeatherRequestFixture on FetchWeatherRequest {
   // ignore: library_private_types_in_public_api
-  static _FetchWeatherRequestFixtureFactory get fixture =>
+  static _FetchWeatherRequestFixtureFactory get factory =>
       _FetchWeatherRequestFixtureFactory();
 }
 

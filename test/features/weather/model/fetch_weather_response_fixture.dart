@@ -6,7 +6,7 @@ import 'package:flutter_training/features/weather/model/weather_condition.dart';
 
 extension FetchWeatherResponseFixture on FetchWeatherResponse {
   // ignore: library_private_types_in_public_api
-  static _FetchWeatherResponseFixtureFactory get fixture =>
+  static _FetchWeatherResponseFixtureFactory get factory =>
       _FetchWeatherResponseFixtureFactory();
 }
 
