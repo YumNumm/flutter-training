@@ -14,6 +14,6 @@ pre-push:
   parallel: true
   commands:
     tests:
-      run: flutter test
+      run: fvm flutter test
     linter:
-      run: flutter analyze
+      run: fvm flutter analyze
