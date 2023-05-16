@@ -72,7 +72,7 @@ void main() {
           expect(
             actualResponse,
             throwsA(
-              isA<YumemiWeatherError>(),
+              YumemiWeatherError.invalidParameter,
             ),
           );
         },
@@ -95,7 +95,7 @@ void main() {
           expect(
             actualResponse,
             throwsA(
-              isA<YumemiWeatherError>(),
+              YumemiWeatherError.unknown,
             ),
           );
         },
