@@ -4,6 +4,7 @@ import 'package:flutter_training/features/weather/data/weather_data_source.dart'
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
 import 'package:flutter_training/features/weather/model/weather_error_type.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:yumemi_weather/yumemi_weather.dart';
 
@@ -33,8 +34,11 @@ class FetchWeatherUseCase extends UseCase<FetchWeatherRequest,
         case YumemiWeatherError.invalidParameter:
           return const Result.failure(WeatherErrorType.invalidParameter);
       }
+    } on CheckedFromJsonException {
+      // JSONからのデシリアライズに失敗した場合
+      return const Result.failure(WeatherErrorType.invalidResponse);
     } on FormatException {
-      // jsonDecode() でエラーが発生した場合
+      // JSONのパースに失敗した場合
       return const Result.failure(WeatherErrorType.invalidResponse);
     }
   }

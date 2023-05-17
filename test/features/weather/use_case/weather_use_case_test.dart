@@ -75,4 +75,37 @@ void main() {
       );
     },
   );
+  test('dataSourceでJSONのデシリアライズに失敗した場合 正しいErrorTypeのResultを返す', () {
+    when(dataSource.fetchWeather(any)).thenThrow(
+      CheckedFromJsonException(
+        {},
+        null,
+        'className',
+        'A value must be provided. Supported values: sunny, cloudy, rainy',
+      ),
+    );
+    const expectedResponse =
+        Result<FetchWeatherResponse, WeatherErrorType>.failure(
+      WeatherErrorType.invalidResponse,
+    );
+    // Assert
+    expect(
+      actualResponse(),
+      expectedResponse,
+    );
+  });
+  test('dataSourceでJSONパースに失敗した場合 正しいErrorTypeのResultを返す', () {
+    when(dataSource.fetchWeather(any)).thenThrow(
+      const FormatException(),
+    );
+    const expectedResponse =
+        Result<FetchWeatherResponse, WeatherErrorType>.failure(
+      WeatherErrorType.invalidResponse,
+    );
+    // Assert
+    expect(
+      actualResponse(),
+      expectedResponse,
+    );
+  });
 }
