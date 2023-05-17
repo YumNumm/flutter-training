@@ -19,86 +19,81 @@ import 'weather_data_source_test.mocks.dart';
 void main() {
   final api = MockYumemiWeather();
   final dataSource = WeatherDataSource(api);
-  group(
-    'WeatherDataSource',
+  test(
+    'Yumemi Weather APIを用いていることの確認',
     () {
-      test(
-        'Yumemi Weather APIを用いていることの確認',
-        () {
-          // Arrange
-          final expectedResponse = FetchWeatherResponse(
-            weatherCondition: WeatherCondition.sunny,
+      // Arrange
+      final expectedResponse = FetchWeatherResponse(
+        weatherCondition: WeatherCondition.sunny,
+        date: DateTime(2000),
+        maxTemperature: 20,
+        minTemperature: 10,
+      );
+      when(api.fetchWeather(any)).thenReturn(
+        jsonEncode(
+          expectedResponse.toJson(),
+        ),
+      );
+      // Act
+      FetchWeatherResponse act() {
+        return dataSource.fetchWeather(
+          FetchWeatherRequest(
+            area: 'London',
             date: DateTime(2000),
-            maxTemperature: 20,
-            minTemperature: 10,
-          );
-          when(api.fetchWeather(any)).thenReturn(
-            jsonEncode(
-              expectedResponse.toJson(),
-            ),
-          );
-          // Act
-          FetchWeatherResponse act() {
-            return dataSource.fetchWeather(
-              FetchWeatherRequest(
-                area: 'London',
-                date: DateTime(2000),
-              ),
-            );
-          }
+          ),
+        );
+      }
 
-          // Assert
-          expect(
-            act(),
-            expectedResponse,
-          );
-        },
+      // Assert
+      expect(
+        act(),
+        expectedResponse,
       );
-      test(
-        '不正なRequest時にYumemiWeatherError.invalidParameterの例外を出す',
-        () {
-          // Arrange
-          when(api.fetchWeather(any)).thenThrow(
-            YumemiWeatherError.invalidParameter,
-          );
-          // Act
-          FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
-                FetchWeatherRequest(
-                  area: 'London',
-                  date: DateTime(2000),
-                ),
-              );
-          // Assert
-          expect(
-            actualResponse,
-            throwsA(
-              YumemiWeatherError.invalidParameter,
+    },
+  );
+  test(
+    '不正なRequest時にYumemiWeatherError.invalidParameterの例外を出す',
+    () {
+      // Arrange
+      when(api.fetchWeather(any)).thenThrow(
+        YumemiWeatherError.invalidParameter,
+      );
+      // Act
+      FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
+            FetchWeatherRequest(
+              area: 'London',
+              date: DateTime(2000),
             ),
           );
-        },
+      // Assert
+      expect(
+        actualResponse,
+        throwsA(
+          YumemiWeatherError.invalidParameter,
+        ),
       );
-      test(
-        'APIエラー発生時にYumemiWeatherError.unknownの例外を出す',
-        () {
-          // Arrange
-          when(api.fetchWeather(any)).thenThrow(
-            YumemiWeatherError.unknown,
-          );
-          // Act
-          FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
-                FetchWeatherRequest(
-                  area: 'London',
-                  date: DateTime(2000),
-                ),
-              );
-          // Assert
-          expect(
-            actualResponse,
-            throwsA(
-              YumemiWeatherError.unknown,
+    },
+  );
+  test(
+    'APIエラー発生時にYumemiWeatherError.unknownの例外を出す',
+    () {
+      // Arrange
+      when(api.fetchWeather(any)).thenThrow(
+        YumemiWeatherError.unknown,
+      );
+      // Act
+      FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
+            FetchWeatherRequest(
+              area: 'London',
+              date: DateTime(2000),
             ),
           );
-        },
+      // Assert
+      expect(
+        actualResponse,
+        throwsA(
+          YumemiWeatherError.unknown,
+        ),
       );
     },
   );
