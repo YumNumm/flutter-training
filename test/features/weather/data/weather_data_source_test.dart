@@ -19,6 +19,15 @@ import 'weather_data_source_test.mocks.dart';
 void main() {
   final api = MockYumemiWeather();
   final dataSource = WeatherDataSource(api);
+
+  // Act
+  FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
+        FetchWeatherRequest(
+          area: 'London',
+          date: DateTime(2000),
+        ),
+      );
+
   test(
     'Yumemi Weather APIを用いていることの確認',
     () {
@@ -58,13 +67,6 @@ void main() {
       when(api.fetchWeather(any)).thenThrow(
         YumemiWeatherError.invalidParameter,
       );
-      // Act
-      FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
-            FetchWeatherRequest(
-              area: 'London',
-              date: DateTime(2000),
-            ),
-          );
       // Assert
       expect(
         actualResponse,
@@ -81,13 +83,6 @@ void main() {
       when(api.fetchWeather(any)).thenThrow(
         YumemiWeatherError.unknown,
       );
-      // Act
-      FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
-            FetchWeatherRequest(
-              area: 'London',
-              date: DateTime(2000),
-            ),
-          );
       // Assert
       expect(
         actualResponse,
