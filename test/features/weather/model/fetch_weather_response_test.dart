@@ -10,9 +10,9 @@ void main() {
       final responseWithJsons =
           FetchWeatherResponseFixture.factory.makeManyWithJsonArray(100);
       for (final response in responseWithJsons) {
-        final actual = FetchWeatherResponse.fromJson(response.json);
+        final act = FetchWeatherResponse.fromJson(response.json);
         final expected = response.object;
-        expect(actual, expected);
+        expect(act, expected);
       }
     },
   );
@@ -22,9 +22,9 @@ void main() {
       final responseWithJsons =
           FetchWeatherResponseFixture.factory.makeManyWithJsonArray(100);
       for (final response in responseWithJsons) {
-        final actual = response.object.toJson();
+        final act = response.object.toJson();
         final expected = response.json;
-        expect(actual, expected);
+        expect(act, expected);
       }
     },
   );

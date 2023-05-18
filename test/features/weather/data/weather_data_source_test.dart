@@ -21,7 +21,7 @@ void main() {
   final dataSource = WeatherDataSource(api);
 
   // Act
-  FetchWeatherResponse actualResponse() => dataSource.fetchWeather(
+  FetchWeatherResponse act() => dataSource.fetchWeather(
         FetchWeatherRequest(
           area: 'London',
           date: DateTime(2000),
@@ -43,15 +43,6 @@ void main() {
           expectedResponse.toJson(),
         ),
       );
-      // Act
-      FetchWeatherResponse act() {
-        return dataSource.fetchWeather(
-          FetchWeatherRequest(
-            area: 'London',
-            date: DateTime(2000),
-          ),
-        );
-      }
 
       // Assert
       expect(
@@ -69,7 +60,7 @@ void main() {
       );
       // Assert
       expect(
-        actualResponse,
+        act,
         throwsA(
           YumemiWeatherError.invalidParameter,
         ),
@@ -85,7 +76,7 @@ void main() {
       );
       // Assert
       expect(
-        actualResponse,
+        act,
         throwsA(
           YumemiWeatherError.unknown,
         ),

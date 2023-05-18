@@ -23,8 +23,7 @@ void main() {
   final useCase = FetchWeatherUseCase(dataSource);
 
   // Act
-  Result<FetchWeatherResponse, WeatherErrorType> actualResponse() =>
-      useCase.call(
+  Result<FetchWeatherResponse, WeatherErrorType> act() => useCase.call(
         FetchWeatherRequest(
           area: 'London',
           date: DateTime(2000),
@@ -51,7 +50,7 @@ void main() {
 
       // Assert
       expect(
-        actualResponse(),
+        act(),
         expectedResponse,
       );
     },
@@ -70,7 +69,7 @@ void main() {
       );
       // Assert
       expect(
-        actualResponse(),
+        act(),
         expectedResponse,
       );
     },
@@ -90,7 +89,7 @@ void main() {
     );
     // Assert
     expect(
-      actualResponse(),
+      act(),
       expectedResponse,
     );
   });
@@ -104,7 +103,7 @@ void main() {
     );
     // Assert
     expect(
-      actualResponse(),
+      act(),
       expectedResponse,
     );
   });
