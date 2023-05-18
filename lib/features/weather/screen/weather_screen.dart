@@ -18,7 +18,7 @@ class WeatherScreen extends HookConsumerWidget {
       await showErrorDialog(
         context: context,
         title: 'エラーが発生しました',
-        message: error.toString(),
+        message: error.message,
       );
       // 状態をリセットする
       ref.invalidate(weatherViewModelProvider);
