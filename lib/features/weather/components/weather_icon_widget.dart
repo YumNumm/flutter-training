@@ -12,7 +12,10 @@ class WeatherIconWidget extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: weatherCondition != null
-          ? SvgPicture.asset(weatherCondition!._svgImagePath)
+          ? SvgPicture.asset(
+              weatherCondition!._svgImagePath,
+              key: ValueKey('weather_icon_${weatherCondition!.name}'),
+            )
           : const Placeholder(),
     );
   }
