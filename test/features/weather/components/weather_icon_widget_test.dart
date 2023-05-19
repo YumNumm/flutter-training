@@ -8,9 +8,8 @@ void main() {
   group(
     'WeatherIconWidget',
     () {
-      testWidgets('weatherConditionがnullの場合 Placeholderを表示する',
-          (widgetTester) async {
-        await widgetTester.pumpWidget(
+      testWidgets('weatherConditionがnullの場合 Placeholderを表示する', (tester) async {
+        await tester.pumpWidget(
           const WeatherIconWidget(weatherCondition: null),
         );
         expect(find.byType(Placeholder), findsOneWidget);
