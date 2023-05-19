@@ -20,10 +20,9 @@ class _WeatherTestScreen extends StatelessWidget {
 }
 
 void main() {
-  setUp(setDisplaySize);
-  tearDown(clearDisplaySize);
-
   testWidgets('初期状態で、全てのWidgetが表示されていること', (tester) async {
+    setDisplaySize(tester);
+    tearDownDisplaySize(tester);
     await tester.pumpWidget(const _WeatherTestScreen());
     expect(find.byType(WeatherScreen), findsOneWidget);
 
