@@ -31,10 +31,11 @@ class _WeatherTemperatureTestWidget extends StatelessWidget {
 }
 
 void main() {
+  setUp(setDisplaySize);
+  tearDown(clearDisplaySize);
+
   group('WeatherTemperatureWidget', () {
     testWidgets('引数が何も指定されなかった場合 **°Cと表示する', (tester) async {
-      setDisplaySize(tester);
-      tearDownDisplaySize(tester);
       await tester.pumpWidget(
         const _WeatherTemperatureTestWidget(
           weatherCondition: null,
@@ -47,8 +48,6 @@ void main() {
     testWidgets(
       '各TextWidgetの上下には16pxのパディングがある',
       (tester) async {
-        setDisplaySize(tester);
-        tearDownDisplaySize(tester);
         await tester.pumpWidget(
           const _WeatherTemperatureTestWidget(
             weatherCondition: null,
@@ -77,8 +76,6 @@ void main() {
     testWidgets(
       '最低気温のTextStyleは labelLarge で colorは青色',
       (tester) async {
-        setDisplaySize(tester);
-        tearDownDisplaySize(tester);
         await tester.pumpWidget(
           const _WeatherTemperatureTestWidget(
             weatherCondition: null,
@@ -102,8 +99,6 @@ void main() {
     testWidgets(
       '最高気温のTextStyleは labelLarge で colorは赤色',
       (tester) async {
-        setDisplaySize(tester);
-        tearDownDisplaySize(tester);
         await tester.pumpWidget(
           const _WeatherTemperatureTestWidget(
             weatherCondition: null,
