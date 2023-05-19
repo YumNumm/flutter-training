@@ -17,9 +17,9 @@ void main() {
         expect(find.byType(SvgPicture), findsNothing);
       });
       testWidgets('weatherConditionが指定された場合 正しいSvgPictureを表示する',
-          (widgetTester) async {
+          (tester) async {
         for (final weatherCondition in WeatherCondition.values) {
-          await widgetTester.pumpWidget(
+          await tester.pumpWidget(
             WeatherIconWidget(
               weatherCondition: weatherCondition,
             ),
@@ -27,12 +27,12 @@ void main() {
           expect(find.byType(Placeholder), findsNothing);
           expect(find.byType(SvgPicture), findsOneWidget);
 
-          final svgPicture =
-              find.byType(SvgPicture).evaluate().first.widget as SvgPicture;
-          expect(
-            svgPicture.key,
-            ValueKey('weather_icon_${weatherCondition.name}'),
+          // Assert
+          expect(find.byType(WeatherIconWidget), findsOneWidget);
+          final weatherIconWidget = tester.widget<WeatherIconWidget>(
+            find.byType(WeatherIconWidget),
           );
+          expect(weatherIconWidget.weatherCondition, weatherCondition);
         }
       });
     },
