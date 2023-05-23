@@ -17,16 +17,16 @@ FetchWeatherUseCase fetchWeatherUseCase(FetchWeatherUseCaseRef ref) =>
     );
 
 class FetchWeatherUseCase extends UseCase<FetchWeatherRequest,
-    Result<FetchWeatherResponse, WeatherErrorType>> {
+    Future<Result<FetchWeatherResponse, WeatherErrorType>>> {
   FetchWeatherUseCase(this._dataSource);
   final WeatherDataSource _dataSource;
 
   @override
-  Result<FetchWeatherResponse, WeatherErrorType> call(
+  Future<Result<FetchWeatherResponse, WeatherErrorType>> call(
     FetchWeatherRequest param,
-  ) {
+  ) async {
     try {
-      return Result.success(_dataSource.fetchWeather(param));
+      return Result.success(await _dataSource.fetchWeather(param));
     } on YumemiWeatherError catch (e) {
       switch (e) {
         case YumemiWeatherError.unknown:
