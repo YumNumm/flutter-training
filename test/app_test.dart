@@ -10,7 +10,7 @@ void main() {
   setUp(setDisplaySize);
   tearDown(clearDisplaySize);
 
-  testWidgets('SplashScreenからWeatherScreenに遷移すること', (tester) async {
+  testWidgets('500ms後に自動的にSplashScreenからWeatherScreenに遷移すること', (tester) async {
     await tester.pumpWidget(
       const ProviderScope(
         child: App(),
