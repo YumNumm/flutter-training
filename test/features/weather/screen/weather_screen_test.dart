@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/components/weather_icon_widget.dart';
@@ -26,6 +27,31 @@ class _WeatherTestScreen extends StatelessWidget {
   }
 }
 
+Finder findSvgImage(String assetName) {
+  return find.byWidgetPredicate(
+    (widget) =>
+        widget is SvgPicture &&
+        (widget.bytesLoader as SvgAssetLoader) // Here!
+                .assetName ==
+            assetName,
+  );
+}
+
+MockWeatherUseCase createMockUseCase({
+  required WeatherCondition expectedCondition,
+}) =>
+    MockWeatherUseCase()
+      ..result(
+        Result.success(
+          FetchWeatherResponse(
+            weatherCondition: expectedCondition,
+            date: DateTime(2000),
+            maxTemperature: 30,
+            minTemperature: 10,
+          ),
+        ),
+      );
+
 void main() {
   setUp(setDisplaySize);
   tearDown(clearDisplaySize);
@@ -48,21 +74,13 @@ void main() {
     '特定の条件で、晴れの画像が表示されること',
     (tester) async {
       // Arrange
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          Result.success(
-            FetchWeatherResponse(
-              weatherCondition: WeatherCondition.sunny,
-              date: DateTime(2000),
-              maxTemperature: 30,
-              minTemperature: 10,
-            ),
-          ),
-        );
+      const weatherCondition = WeatherCondition.sunny;
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
+            createMockUseCase(
+              expectedCondition: weatherCondition,
+            ),
           ),
         ],
         child: const _WeatherTestScreen(),
@@ -72,32 +90,21 @@ void main() {
       await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
-      expect(find.byType(WeatherIconWidget), findsOneWidget);
-      final weatherIconWidget = tester.widget<WeatherIconWidget>(
-        find.byType(WeatherIconWidget),
+      expect(
+        findSvgImage(weatherCondition.svgImagePath),
+        findsOneWidget,
       );
-      expect(weatherIconWidget.weatherCondition, WeatherCondition.sunny);
     },
   );
   testWidgets(
     '特定の条件で、くもりの画像が表示されること',
     (tester) async {
       // Arrange
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          Result.success(
-            FetchWeatherResponse(
-              weatherCondition: WeatherCondition.cloudy,
-              date: DateTime(2000),
-              maxTemperature: 30,
-              minTemperature: 10,
-            ),
-          ),
-        );
+      const weatherCondition = WeatherCondition.cloudy;
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
+            createMockUseCase(expectedCondition: weatherCondition),
           ),
         ],
         child: const _WeatherTestScreen(),
@@ -107,32 +114,21 @@ void main() {
       await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
-      expect(find.byType(WeatherIconWidget), findsOneWidget);
-      final weatherIconWidget = tester.widget<WeatherIconWidget>(
-        find.byType(WeatherIconWidget),
+      expect(
+        findSvgImage(weatherCondition.svgImagePath),
+        findsOneWidget,
       );
-      expect(weatherIconWidget.weatherCondition, WeatherCondition.cloudy);
     },
   );
   testWidgets(
     '特定の条件で、雨の画像が表示されること',
     (tester) async {
       // Arrange
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          Result.success(
-            FetchWeatherResponse(
-              weatherCondition: WeatherCondition.rainy,
-              date: DateTime(2000),
-              maxTemperature: 30,
-              minTemperature: 10,
-            ),
-          ),
-        );
+      const weatherCondition = WeatherCondition.rainy;
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
+            createMockUseCase(expectedCondition: weatherCondition),
           ),
         ],
         child: const _WeatherTestScreen(),
@@ -142,11 +138,10 @@ void main() {
       await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
-      expect(find.byType(WeatherIconWidget), findsOneWidget);
-      final weatherIconWidget = tester.widget<WeatherIconWidget>(
-        find.byType(WeatherIconWidget),
+      expect(
+        findSvgImage(weatherCondition.svgImagePath),
+        findsOneWidget,
       );
-      expect(weatherIconWidget.weatherCondition, WeatherCondition.rainy);
     },
   );
   testWidgets(
@@ -173,21 +168,12 @@ void main() {
     '特定の条件で、最高気温が表示されること',
     (tester) async {
       // Arrange
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          Result.success(
-            FetchWeatherResponse(
-              weatherCondition: WeatherCondition.sunny,
-              date: DateTime(2000),
-              maxTemperature: 30,
-              minTemperature: 10,
-            ),
-          ),
-        );
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
+            createMockUseCase(
+              expectedCondition: WeatherCondition.sunny,
+            ),
           ),
         ],
         child: const _WeatherTestScreen(),
@@ -209,21 +195,12 @@ void main() {
     '特定の条件で、最低気温が表示されること',
     (tester) async {
       // Arrange
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          Result.success(
-            FetchWeatherResponse(
-              weatherCondition: WeatherCondition.sunny,
-              date: DateTime(2000),
-              maxTemperature: 30,
-              minTemperature: 10,
-            ),
-          ),
-        );
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
+            createMockUseCase(
+              expectedCondition: WeatherCondition.sunny,
+            ),
           ),
         ],
         child: const _WeatherTestScreen(),
@@ -237,7 +214,7 @@ void main() {
       final weatherTemperatureWidget = tester.widget<WeatherTemperatureWidget>(
         find.byType(WeatherTemperatureWidget),
       );
-      expect(weatherTemperatureWidget.minTemperature, 10);
+      expect(weatherTemperatureWidget.maxTemperature, 30);
       expect(find.text('10°C'), findsOneWidget);
     },
   );

@@ -12,12 +12,12 @@ class WeatherIconWidget extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1,
       child: weatherCondition != null
-          ? SvgPicture.asset(weatherCondition!._svgImagePath)
+          ? SvgPicture.asset(weatherCondition!.svgImagePath)
           : const Placeholder(),
     );
   }
 }
 
 extension WeatherConditionExtension on WeatherCondition {
-  String get _svgImagePath => 'assets/images/$name.svg';
+  String get svgImagePath => 'assets/images/$name.svg';
 }
