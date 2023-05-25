@@ -23,7 +23,7 @@ void main() {
   final useCase = FetchWeatherUseCase(dataSource);
 
   // Act
-  Result<FetchWeatherResponse, WeatherErrorType> act() => useCase.call(
+  Future<Result<FetchWeatherResponse, WeatherErrorType>> act() => useCase.call(
         FetchWeatherRequest(
           area: 'London',
           date: DateTime(2000),
@@ -32,7 +32,7 @@ void main() {
 
   test(
     'useCaseを呼び出すと dataSoruceから情報を入手する',
-    () {
+    () async {
       final expectedWeatherResponse = FetchWeatherResponse(
         weatherCondition: WeatherCondition.sunny,
         date: DateTime(2000),
@@ -44,13 +44,13 @@ void main() {
           Result<FetchWeatherResponse, WeatherErrorType>.success(
         expectedWeatherResponse,
       );
-      when(dataSource.fetchWeather(any)).thenReturn(
-        expectedWeatherResponse,
+      when(dataSource.fetchWeather(any)).thenAnswer(
+        (_) => Future.value(expectedWeatherResponse),
       );
 
       // Assert
       expect(
-        act(),
+        await act(),
         expectedResponse,
       );
     },
@@ -58,7 +58,7 @@ void main() {
 
   test(
     'dataSourceからYumemiWeatherError.unknownが返ってきた場合 正しいErrorTypeのResultを返す',
-    () {
+    () async {
       // Arrange
       when(dataSource.fetchWeather(any)).thenThrow(
         YumemiWeatherError.unknown,
@@ -69,42 +69,48 @@ void main() {
       );
       // Assert
       expect(
-        act(),
+        await act(),
         expectedResponse,
       );
     },
   );
-  test('dataSourceでJSONのデシリアライズに失敗した場合 正しいErrorTypeのResultを返す', () {
-    when(dataSource.fetchWeather(any)).thenThrow(
-      CheckedFromJsonException(
-        {},
-        null,
-        'className',
-        'A value must be provided. Supported values: sunny, cloudy, rainy',
-      ),
-    );
-    const expectedResponse =
-        Result<FetchWeatherResponse, WeatherErrorType>.failure(
-      WeatherErrorType.invalidResponse,
-    );
-    // Assert
-    expect(
-      act(),
-      expectedResponse,
-    );
-  });
-  test('dataSourceでJSONパースに失敗した場合 正しいErrorTypeのResultを返す', () {
-    when(dataSource.fetchWeather(any)).thenThrow(
-      const FormatException(),
-    );
-    const expectedResponse =
-        Result<FetchWeatherResponse, WeatherErrorType>.failure(
-      WeatherErrorType.invalidResponse,
-    );
-    // Assert
-    expect(
-      act(),
-      expectedResponse,
-    );
-  });
+  test(
+    'dataSourceでJSONのデシリアライズに失敗した場合 正しいErrorTypeのResultを返す',
+    () async {
+      when(dataSource.fetchWeather(any)).thenThrow(
+        CheckedFromJsonException(
+          {},
+          null,
+          'className',
+          'A value must be provided. Supported values: sunny, cloudy, rainy',
+        ),
+      );
+      const expectedResponse =
+          Result<FetchWeatherResponse, WeatherErrorType>.failure(
+        WeatherErrorType.invalidResponse,
+      );
+      // Assert
+      expect(
+        await act(),
+        expectedResponse,
+      );
+    },
+  );
+  test(
+    'dataSourceでJSONパースに失敗した場合 正しいErrorTypeのResultを返す',
+    () async {
+      when(dataSource.fetchWeather(any)).thenThrow(
+        const FormatException(),
+      );
+      const expectedResponse =
+          Result<FetchWeatherResponse, WeatherErrorType>.failure(
+        WeatherErrorType.invalidResponse,
+      );
+      // Assert
+      expect(
+        await act(),
+        expectedResponse,
+      );
+    },
+  );
 }

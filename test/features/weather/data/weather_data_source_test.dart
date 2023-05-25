@@ -21,7 +21,7 @@ void main() {
   final dataSource = WeatherDataSource(api);
 
   // Act
-  FetchWeatherResponse act() => dataSource.fetchWeather(
+  Future<FetchWeatherResponse> act() => dataSource.fetchWeather(
         FetchWeatherRequest(
           area: 'London',
           date: DateTime(2000),
@@ -30,7 +30,7 @@ void main() {
 
   test(
     'Yumemi Weather APIを用いていることの確認',
-    () {
+    () async {
       // Arrange
       final expectedResponse = FetchWeatherResponse(
         weatherCondition: WeatherCondition.sunny,
@@ -38,7 +38,7 @@ void main() {
         maxTemperature: 20,
         minTemperature: 10,
       );
-      when(api.fetchWeather(any)).thenReturn(
+      when(api.syncFetchWeather(any)).thenReturn(
         jsonEncode(
           expectedResponse.toJson(),
         ),
@@ -46,7 +46,7 @@ void main() {
 
       // Assert
       expect(
-        act(),
+        await act(),
         expectedResponse,
       );
     },
@@ -55,7 +55,7 @@ void main() {
     '不正なRequest時にYumemiWeatherError.invalidParameterの例外を出す',
     () {
       // Arrange
-      when(api.fetchWeather(any)).thenThrow(
+      when(api.syncFetchWeather(any)).thenThrow(
         YumemiWeatherError.invalidParameter,
       );
       // Assert
@@ -71,7 +71,7 @@ void main() {
     'APIエラー発生時にYumemiWeatherError.unknownの例外を出す',
     () {
       // Arrange
-      when(api.fetchWeather(any)).thenThrow(
+      when(api.syncFetchWeather(any)).thenThrow(
         YumemiWeatherError.unknown,
       );
       // Assert

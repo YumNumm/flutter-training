@@ -2,27 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/common/model/result.dart';
+import 'package:flutter_training/common/provider/router_provider.dart';
+import 'package:flutter_training/constants/route.dart';
 import 'package:flutter_training/features/weather/components/weather_icon_widget.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:flutter_training/features/weather/model/weather_error_type.dart';
+import 'package:flutter_training/features/weather/model/weather_view_model_state.dart';
 import 'package:flutter_training/features/weather/screen/weather_screen.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
+import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../utils/display_size.dart';
 import '../viewmodel/weather_viewmodel_test.dart';
 
-class _WeatherTestScreen extends StatelessWidget {
+class _WeatherTestScreen extends HookConsumerWidget {
   const _WeatherTestScreen();
 
   @override
-  Widget build(BuildContext context) {
-    return const ProviderScope(
-      child: MaterialApp(
-        home: WeatherScreen(),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.endOfFrame.then(
+      (_) => ref
+          .read(routerProvider)
+          .pushReplacement(const WeatherRoute().location),
+    );
+    return MaterialApp.router(
+      routerConfig: ref.watch(routerProvider),
     );
   }
 }
@@ -37,20 +44,13 @@ Finder findSvgImage(String assetName) {
   );
 }
 
-MockWeatherUseCase createMockUseCase({
-  required WeatherCondition expectedCondition,
-}) =>
-    MockWeatherUseCase()
-      ..result(
-        Result.success(
-          FetchWeatherResponse(
-            weatherCondition: expectedCondition,
-            date: DateTime(2000),
-            maxTemperature: 30,
-            minTemperature: 10,
-          ),
-        ),
-      );
+class _FakeWeatherViewModel extends WeatherViewModel {
+  _FakeWeatherViewModel(this.initialState);
+  final AsyncValue<WeatherViewModelState?> initialState;
+
+  @override
+  AsyncValue<WeatherViewModelState?> build() => initialState;
+}
 
 void main() {
   setUp(setDisplaySize);
@@ -59,7 +59,11 @@ void main() {
   late ProviderScope providerScope;
 
   testWidgets('初期状態で、全てのWidgetが表示されていること', (tester) async {
-    await tester.pumpWidget(const _WeatherTestScreen());
+    providerScope = const ProviderScope(
+      child: _WeatherTestScreen(),
+    );
+    await tester.pumpWidget(providerScope);
+    await tester.pumpAndSettle();
     expect(find.byType(WeatherScreen), findsOneWidget);
 
     expect(find.byType(WeatherTemperatureWidget), findsOneWidget);
@@ -77,17 +81,21 @@ void main() {
       const weatherCondition = WeatherCondition.sunny;
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            createMockUseCase(
-              expectedCondition: weatherCondition,
+          weatherViewModelProvider.overrideWith(
+            () => _FakeWeatherViewModel(
+              const AsyncData(
+                WeatherViewModelState(
+                  weatherCondition: weatherCondition,
+                  maxTemperature: 30,
+                  minTemperature: 10,
+                ),
+              ),
             ),
           ),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
-      // Act
-      await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
       expect(
@@ -103,15 +111,21 @@ void main() {
       const weatherCondition = WeatherCondition.cloudy;
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            createMockUseCase(expectedCondition: weatherCondition),
+          weatherViewModelProvider.overrideWith(
+            () => _FakeWeatherViewModel(
+              const AsyncData(
+                WeatherViewModelState(
+                  weatherCondition: weatherCondition,
+                  maxTemperature: 30,
+                  minTemperature: 10,
+                ),
+              ),
+            ),
           ),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
-      // Act
-      await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
       expect(
@@ -127,15 +141,21 @@ void main() {
       const weatherCondition = WeatherCondition.rainy;
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            createMockUseCase(expectedCondition: weatherCondition),
+          weatherViewModelProvider.overrideWith(
+            () => _FakeWeatherViewModel(
+              const AsyncData(
+                WeatherViewModelState(
+                  weatherCondition: weatherCondition,
+                  maxTemperature: 30,
+                  minTemperature: 10,
+                ),
+              ),
+            ),
           ),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
-      // Act
-      await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
       expect(
@@ -170,17 +190,21 @@ void main() {
       // Arrange
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            createMockUseCase(
-              expectedCondition: WeatherCondition.sunny,
+          weatherViewModelProvider.overrideWith(
+            () => _FakeWeatherViewModel(
+              const AsyncData(
+                WeatherViewModelState(
+                  weatherCondition: WeatherCondition.cloudy,
+                  maxTemperature: 30,
+                  minTemperature: 10,
+                ),
+              ),
             ),
           ),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
-      // Act
-      await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
       expect(find.byType(WeatherTemperatureWidget), findsOneWidget);
@@ -197,24 +221,28 @@ void main() {
       // Arrange
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            createMockUseCase(
-              expectedCondition: WeatherCondition.sunny,
+          weatherViewModelProvider.overrideWith(
+            () => _FakeWeatherViewModel(
+              const AsyncData(
+                WeatherViewModelState(
+                  weatherCondition: WeatherCondition.cloudy,
+                  maxTemperature: 30,
+                  minTemperature: 10,
+                ),
+              ),
             ),
           ),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
-      // Act
-      await tester.tap(find.text('Reload'));
       await tester.pumpAndSettle();
       // Assert
       expect(find.byType(WeatherTemperatureWidget), findsOneWidget);
       final weatherTemperatureWidget = tester.widget<WeatherTemperatureWidget>(
         find.byType(WeatherTemperatureWidget),
       );
-      expect(weatherTemperatureWidget.maxTemperature, 30);
+      expect(weatherTemperatureWidget.minTemperature, 10);
       expect(find.text('10°C'), findsOneWidget);
     },
   );
@@ -224,8 +252,10 @@ void main() {
       // Arrange
       final mockUseCase = MockWeatherUseCase()
         ..result(
-          const Result.failure(
-            WeatherErrorType.unknown,
+          Future.value(
+            const Result<FetchWeatherResponse, WeatherErrorType>.failure(
+              WeatherErrorType.unknown,
+            ),
           ),
         );
       providerScope = ProviderScope(
@@ -237,9 +267,11 @@ void main() {
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
+      await tester.pumpAndSettle();
       // Act
       await tester.tap(find.text('Reload'));
-      await tester.pumpAndSettle();
+      // pumpAndSettleだとタイムアウトしてしまうので pumpにする
+      await tester.pump(const Duration(milliseconds: 100));
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.text('エラーが発生しました'), findsOneWidget);
