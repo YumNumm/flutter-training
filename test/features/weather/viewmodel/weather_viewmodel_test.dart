@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/common/model/result.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
@@ -12,20 +14,30 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../common/use_case/fake_use_case.dart';
 
 class MockWeatherUseCase extends FakeUseCase<FetchWeatherRequest,
-        Result<FetchWeatherResponse, WeatherErrorType>>
+        Future<Result<FetchWeatherResponse, WeatherErrorType>>>
     implements FetchWeatherUseCase {}
 
+class _FakeWeatherViewModel extends WeatherViewModel {
+  _FakeWeatherViewModel(this.initialState);
+  final AsyncValue<WeatherViewModelState?> initialState;
+
+  @override
+  AsyncValue<WeatherViewModelState?> build() => initialState;
+}
+
 void main() {
-  test('viewModelでfetchWeatherを呼び出すと 状態が更新されている', () {
+  test('viewModelでfetchWeatherを呼び出すと 状態が更新されている', () async {
     // Arrange
     final mockUseCase = MockWeatherUseCase()
       ..result(
-        Result<FetchWeatherResponse, WeatherErrorType>.success(
-          FetchWeatherResponse(
-            weatherCondition: WeatherCondition.sunny,
-            date: DateTime(2000),
-            maxTemperature: 20,
-            minTemperature: 10,
+        Future.value(
+          Result<FetchWeatherResponse, WeatherErrorType>.success(
+            FetchWeatherResponse(
+              weatherCondition: WeatherCondition.sunny,
+              date: DateTime(2000),
+              maxTemperature: 20,
+              minTemperature: 10,
+            ),
           ),
         ),
       );
@@ -39,16 +51,15 @@ void main() {
     addTearDown(container.dispose);
 
     // Act
-    Result<WeatherViewModelState, WeatherErrorType> act() {
-      container.read(weatherViewModelProvider.notifier).fetchWeather(
+    Future<AsyncValue<WeatherViewModelState?>> act() async {
+      await container.read(weatherViewModelProvider.notifier).fetchWeather(
             area: 'London',
             date: DateTime(2000),
           );
       return container.read(weatherViewModelProvider);
     }
 
-    const expectedStateResult =
-        Result<WeatherViewModelState, WeatherErrorType>.success(
+    const expectedStateResult = AsyncData<WeatherViewModelState?>(
       WeatherViewModelState(
         weatherCondition: WeatherCondition.sunny,
         maxTemperature: 20,
@@ -58,19 +69,105 @@ void main() {
 
     // Assert
     expect(
-      act(),
+      await act(),
       expectedStateResult,
     );
   });
-
   test(
-    'viewModelでfetchWeatherを呼び出し 例外が発生した場合 状態が更新されている',
-    () {
-      // Arrange
+    'APIから返答を待っている間は AsyncLoadingになっている',
+    () async {
+      /// 呼び出し前の状態を作成する
+      const initialState = AsyncValue.data(
+        WeatherViewModelState(
+          weatherCondition: WeatherCondition.sunny,
+          maxTemperature: 20,
+          minTemperature: 10,
+        ),
+      );
+      final fakeViewModel = _FakeWeatherViewModel(
+        initialState,
+      );
+      // このCompleterを使って結果を返す
+      final fetchResultCompleter =
+          Completer<Result<FetchWeatherResponse, WeatherErrorType>>();
       final mockUseCase = MockWeatherUseCase()
         ..result(
-          const Result<FetchWeatherResponse, WeatherErrorType>.failure(
-            WeatherErrorType.unknown,
+          fetchResultCompleter.future,
+        );
+
+      final container = ProviderContainer(
+        overrides: [
+          fetchWeatherUseCaseProvider.overrideWithValue(
+            mockUseCase,
+          ),
+          // 初期状態のみoverrideする
+          weatherViewModelProvider.overrideWith(
+            () => fakeViewModel,
+          ),
+        ],
+      );
+      final fetchCall =
+          container.read(weatherViewModelProvider.notifier).fetchWeather(
+                area: 'London',
+                date: DateTime(2000),
+              );
+
+      final expectedResult =
+          Result<FetchWeatherResponse, WeatherErrorType>.success(
+        FetchWeatherResponse(
+          weatherCondition: WeatherCondition.cloudy,
+          date: DateTime(2000),
+          maxTemperature: 100,
+          minTemperature: 40,
+        ),
+      );
+      fetchResultCompleter.complete(
+        expectedResult,
+      );
+      await fetchCall;
+      final result = container.read(weatherViewModelProvider);
+      expect(result.isLoading, false);
+      expect(
+        result.value!.maxTemperature,
+        expectedResult.valueOrNull!.maxTemperature,
+      );
+      expect(
+        result.value!.minTemperature,
+        expectedResult.valueOrNull!.minTemperature,
+      );
+      expect(
+        result.value!.weatherCondition,
+        expectedResult.valueOrNull!.weatherCondition,
+      );
+      expect(result.asError, null);
+    },
+  );
+  test(
+    'APIから返答を待っている間は 前回の状態を維持しながら AsyncLoadingになっている',
+    () async {
+      /// 呼び出し前の状態を作成する
+      const initialState = AsyncValue.data(
+        WeatherViewModelState(
+          weatherCondition: WeatherCondition.sunny,
+          maxTemperature: 20,
+          minTemperature: 10,
+        ),
+      );
+      final fakeViewModel = _FakeWeatherViewModel(
+        initialState,
+      );
+      final mockUseCase = MockWeatherUseCase()
+        ..result(
+          Future<Result<FetchWeatherResponse, WeatherErrorType>>.delayed(
+            const Duration(seconds: 3),
+            () => Result<FetchWeatherResponse, WeatherErrorType>.success(
+              FetchWeatherResponse(
+                weatherCondition: WeatherCondition.sunny,
+                date: DateTime(2000),
+                maxTemperature: 20,
+                minTemperature: 10,
+              ),
+            ),
           ),
         );
       final container = ProviderContainer(
@@ -78,28 +175,120 @@ void main() {
           fetchWeatherUseCaseProvider.overrideWithValue(
             mockUseCase,
           ),
+          weatherViewModelProvider.overrideWith(
+            () => fakeViewModel,
+          ),
         ],
       );
-      addTearDown(container.dispose);
-
-      // Act
-      Result<WeatherViewModelState, WeatherErrorType> act() {
-        container.read(weatherViewModelProvider.notifier).fetchWeather(
-              area: 'London',
-              date: DateTime(2000),
-            );
+      // 処理開始直後の状態を取得する
+      Future<AsyncValue<WeatherViewModelState?>> act() async {
+        // 返りを待たない
+        unawaited(
+          container.read(weatherViewModelProvider.notifier).fetchWeather(
+                area: 'London',
+                date: DateTime(2000),
+              ),
+        );
         return container.read(weatherViewModelProvider);
       }
 
-      const expectedStateResult =
-          Result<WeatherViewModelState, WeatherErrorType>.failure(
-        WeatherErrorType.unknown,
-      );
+      addTearDown(container.dispose);
 
       // Assert
+      final result = await act();
       expect(
-        act(),
-        expectedStateResult,
+        result.isLoading,
+        true,
+      );
+      expect(
+        result.value,
+        initialState.value,
+      );
+    },
+  );
+  test(
+    'APIの呼び出し中に例外が発生した場合 前回の状態を維持しながら AsyncErrorになっている',
+    () async {
+      /// 呼び出し前の状態を作成する
+      const initialState = AsyncValue.data(
+        WeatherViewModelState(
+          weatherCondition: WeatherCondition.sunny,
+          maxTemperature: 20,
+          minTemperature: 10,
+        ),
+      );
+      final fakeViewModel = _FakeWeatherViewModel(
+        initialState,
+      );
+      // このCompleterを使って結果を返す
+      final fetchResultCompleter =
+          Completer<Result<FetchWeatherResponse, WeatherErrorType>>();
+      final mockUseCase = MockWeatherUseCase()
+        ..result(
+          fetchResultCompleter.future,
+        );
+
+      final container = ProviderContainer(
+        overrides: [
+          fetchWeatherUseCaseProvider.overrideWithValue(
+            mockUseCase,
+          ),
+          weatherViewModelProvider.overrideWith(
+            () => fakeViewModel,
+          ),
+        ],
+      );
+      final fetchCall =
+          container.read(weatherViewModelProvider.notifier).fetchWeather(
+                area: 'London',
+                date: DateTime(2000),
+              );
+      // 結果が返ってくる前の状態
+      final beforeResult = container.read(weatherViewModelProvider);
+      // * 読み込み中
+      expect(
+        beforeResult.isLoading,
+        true,
+      );
+      // * 前回の状態を維持している
+      expect(
+        beforeResult.value,
+        initialState.value,
+      );
+
+      // 結果を返す
+      fetchResultCompleter.complete(
+        const Result<FetchWeatherResponse, WeatherErrorType>.failure(
+          WeatherErrorType.unknown,
+        ),
+      );
+
+      await fetchCall;
+      // 結果が返ってきた後の状態
+      final afterResult = container.read(weatherViewModelProvider);
+      // * 読み込み中ではなくなっている
+      expect(
+        afterResult.isLoading,
+        false,
+      );
+      // * 前回の状態を維持している
+      expect(
+        afterResult.value,
+        initialState.value,
+      );
+      // * エラーが発生している
+      expect(
+        afterResult.hasError,
+        true,
+      );
+      // * エラーの内容はAPIから返ってきたものと同じ
+      expect(
+        afterResult.error! as WeatherExcepiton,
+        const TypeMatcher<WeatherExcepiton>().having(
+          (e) => e.type,
+          'type',
+          WeatherErrorType.unknown,
+        ),
       );
     },
   );
