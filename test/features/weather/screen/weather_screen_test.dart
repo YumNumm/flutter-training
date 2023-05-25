@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_training/common/model/result.dart';
-import 'package:flutter_training/common/provider/router_provider.dart';
-import 'package:flutter_training/constants/route.dart';
 import 'package:flutter_training/features/weather/components/weather_icon_widget.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
@@ -15,7 +13,6 @@ import 'package:flutter_training/features/weather/model/weather_view_model_state
 import 'package:flutter_training/features/weather/screen/weather_screen.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../utils/display_size.dart';
@@ -26,8 +23,8 @@ class _WeatherTestScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MaterialApp.router(
-      routerConfig: ref.watch(routerProvider),
+    return const MaterialApp(
+      home: WeatherScreen(),
     );
   }
 }
@@ -57,17 +54,8 @@ void main() {
   late ProviderScope providerScope;
 
   testWidgets('初期状態で、全てのWidgetが表示されていること', (tester) async {
-    providerScope = ProviderScope(
-      overrides: [
-        // 初期ルートを変更
-        routerProvider.overrideWithValue(
-          GoRouter(
-            routes: $appRoutes,
-            initialLocation: const WeatherRoute().location,
-          ),
-        ),
-      ],
-      child: const _WeatherTestScreen(),
+    providerScope = const ProviderScope(
+      child: _WeatherTestScreen(),
     );
     await tester.pumpWidget(providerScope);
     await tester.pumpAndSettle();
@@ -97,13 +85,6 @@ void main() {
                   minTemperature: 10,
                 ),
               ),
-            ),
-          ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
             ),
           ),
         ],
@@ -136,13 +117,6 @@ void main() {
               ),
             ),
           ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -173,13 +147,6 @@ void main() {
               ),
             ),
           ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -196,17 +163,8 @@ void main() {
     '初期状態で天気の画像は表示されていない',
     (tester) async {
       // Arrange
-      providerScope = ProviderScope(
-        overrides: [
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
-        ],
-        child: const _WeatherTestScreen(),
+      providerScope = const ProviderScope(
+        child: _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
       // Act
@@ -236,13 +194,6 @@ void main() {
                   minTemperature: 10,
                 ),
               ),
-            ),
-          ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
             ),
           ),
         ],
@@ -276,13 +227,6 @@ void main() {
               ),
             ),
           ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -300,34 +244,33 @@ void main() {
   testWidgets(
     '特定の条件で、ダイアログが表示され、特定のメッセージが表示される',
     (tester) async {
+      // エラーダイアログは
+      // 状態がAsyncData->AsyncErrorに遷移したときのみ表示される
       // Arrange
+      // このCompleterを使って結果を返す
+      final fetchResultCompleter =
+          Completer<Result<FetchWeatherResponse, WeatherErrorType>>();
       final mockUseCase = MockWeatherUseCase()
         ..result(
-          Future.value(
-            const Result<FetchWeatherResponse, WeatherErrorType>.failure(
-              WeatherErrorType.unknown,
-            ),
-          ),
+          fetchResultCompleter.future,
         );
+
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
-          ),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
+          fetchWeatherUseCaseProvider.overrideWithValue(mockUseCase),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
       await tester.pumpAndSettle();
+      expect(find.byType(CircularProgressIndicator), findsNothing);
       // Act
+      // この時点では読み込み中になっていないので読み込みボタンを押下
       await tester.tap(find.text('Reload'));
+      // 結果を返す
+      fetchResultCompleter.complete(
+        const Result.failure(WeatherErrorType.unknown),
+      );
       await tester.pumpAndSettle();
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
@@ -338,7 +281,7 @@ void main() {
   testWidgets(
     '特定の条件で、読み込み中のダイアログが表示される',
     (tester) async {
-      // 読み込み中にProgressIndicatorは
+      // ProgressIndicatorは
       // 状態がAsyncData->AsyncLoadingに遷移したときのみ表示される
 
       // Arrange
@@ -353,13 +296,6 @@ void main() {
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(mockUseCase),
-          // 初期ルートを変更
-          routerProvider.overrideWithValue(
-            GoRouter(
-              routes: $appRoutes,
-              initialLocation: const WeatherRoute().location,
-            ),
-          ),
         ],
         child: const _WeatherTestScreen(),
       );

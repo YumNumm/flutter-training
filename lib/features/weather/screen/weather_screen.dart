@@ -22,7 +22,7 @@ class WeatherScreen extends HookConsumerWidget {
       }
       // Call終了時にローディングを閉じる
       if ((previous?.isLoading ?? false) && !next.isLoading) {
-        context.pop();
+        Navigator.of(context).pop();
 
         if (next.asError != null) {
           final errorType = (next.asError!.error as WeatherExcepiton).type;
@@ -97,7 +97,6 @@ class WeatherScreen extends HookConsumerWidget {
   Future<void> showLoadingOverlay({
     required BuildContext context,
   }) async {
-    log('show dialog');
     await showDialog<void>(
       barrierDismissible: false,
       context: context,
