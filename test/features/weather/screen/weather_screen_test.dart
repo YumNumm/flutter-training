@@ -15,21 +15,17 @@ import 'package:flutter_training/features/weather/model/weather_view_model_state
 import 'package:flutter_training/features/weather/screen/weather_screen.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../utils/display_size.dart';
 import '../viewmodel/weather_viewmodel_test.dart';
 
-class _WeatherTestScreen extends HookConsumerWidget {
+class _WeatherTestScreen extends ConsumerWidget {
   const _WeatherTestScreen();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.endOfFrame.then(
-      (_) => ref
-          .read(routerProvider)
-          .pushReplacement(const WeatherRoute().location),
-    );
     return MaterialApp.router(
       routerConfig: ref.watch(routerProvider),
     );
@@ -61,8 +57,17 @@ void main() {
   late ProviderScope providerScope;
 
   testWidgets('初期状態で、全てのWidgetが表示されていること', (tester) async {
-    providerScope = const ProviderScope(
-      child: _WeatherTestScreen(),
+    providerScope = ProviderScope(
+      overrides: [
+        // 初期ルートを変更
+        routerProvider.overrideWithValue(
+          GoRouter(
+            routes: $appRoutes,
+            initialLocation: const WeatherRoute().location,
+          ),
+        ),
+      ],
+      child: const _WeatherTestScreen(),
     );
     await tester.pumpWidget(providerScope);
     await tester.pumpAndSettle();
@@ -92,6 +97,13 @@ void main() {
                   minTemperature: 10,
                 ),
               ),
+            ),
+          ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
             ),
           ),
         ],
@@ -124,6 +136,13 @@ void main() {
               ),
             ),
           ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -154,6 +173,13 @@ void main() {
               ),
             ),
           ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -170,8 +196,17 @@ void main() {
     '初期状態で天気の画像は表示されていない',
     (tester) async {
       // Arrange
-      providerScope = const ProviderScope(
-        child: _WeatherTestScreen(),
+      providerScope = ProviderScope(
+        overrides: [
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
+        ],
+        child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
       // Act
@@ -201,6 +236,13 @@ void main() {
                   minTemperature: 10,
                 ),
               ),
+            ),
+          ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
             ),
           ),
         ],
@@ -234,6 +276,13 @@ void main() {
               ),
             ),
           ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -265,6 +314,13 @@ void main() {
           fetchWeatherUseCaseProvider.overrideWithValue(
             mockUseCase,
           ),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
         ],
         child: const _WeatherTestScreen(),
       );
@@ -272,8 +328,7 @@ void main() {
       await tester.pumpAndSettle();
       // Act
       await tester.tap(find.text('Reload'));
-      // pumpAndSettleだとタイムアウトしてしまうので pumpにする
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pumpAndSettle();
       // Assert
       expect(find.byType(AlertDialog), findsOneWidget);
       expect(find.text('エラーが発生しました'), findsOneWidget);
@@ -298,6 +353,13 @@ void main() {
       providerScope = ProviderScope(
         overrides: [
           fetchWeatherUseCaseProvider.overrideWithValue(mockUseCase),
+          // 初期ルートを変更
+          routerProvider.overrideWithValue(
+            GoRouter(
+              routes: $appRoutes,
+              initialLocation: const WeatherRoute().location,
+            ),
+          ),
         ],
         child: const _WeatherTestScreen(),
       );
