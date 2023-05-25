@@ -97,6 +97,7 @@ class WeatherScreen extends HookConsumerWidget {
   Future<void> showLoadingOverlay({
     required BuildContext context,
   }) async {
+    log('show dialog');
     await showDialog<void>(
       barrierDismissible: false,
       context: context,

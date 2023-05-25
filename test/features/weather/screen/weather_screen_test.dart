@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -281,33 +283,37 @@ void main() {
   testWidgets(
     '特定の条件で、読み込み中のダイアログが表示される',
     (tester) async {
+      // 読み込み中にProgressIndicatorは
+      // 状態がAsyncData->AsyncLoadingに遷移したときのみ表示される
+
       // Arrange
+      // このCompleterを使って結果を返す
+      final fetchResultCompleter =
+          Completer<Result<FetchWeatherResponse, WeatherErrorType>>();
       final mockUseCase = MockWeatherUseCase()
         ..result(
-          Future.value(
-            const Result<FetchWeatherResponse, WeatherErrorType>.failure(
-              WeatherErrorType.unknown,
-            ),
-          ),
+          fetchResultCompleter.future,
         );
+
       providerScope = ProviderScope(
         overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
-          ),
+          fetchWeatherUseCaseProvider.overrideWithValue(mockUseCase),
         ],
         child: const _WeatherTestScreen(),
       );
       await tester.pumpWidget(providerScope);
       await tester.pumpAndSettle();
+      expect(find.byType(CircularProgressIndicator), findsNothing);
       // Act
+      // この時点では読み込み中になっていないので読み込みボタンを押下
       await tester.tap(find.text('Reload'));
       // pumpAndSettleだとタイムアウトしてしまうので pumpにする
       await tester.pump(const Duration(milliseconds: 100));
-      // Assert
-      expect(find.byType(AlertDialog), findsOneWidget);
-      expect(find.text('エラーが発生しました'), findsOneWidget);
-      expect(find.text(WeatherErrorType.unknown.message), findsOneWidget);
+      // Completerで結果を返していないので AsyncLoadingなはず
+      expect(
+        find.byType(CircularProgressIndicator),
+        findsWidgets,
+      );
     },
   );
 }
