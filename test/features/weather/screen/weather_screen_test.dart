@@ -278,4 +278,36 @@ void main() {
       expect(find.text(WeatherErrorType.unknown.message), findsOneWidget);
     },
   );
+  testWidgets(
+    '特定の条件で、読み込み中のダイアログが表示される',
+    (tester) async {
+      // Arrange
+      final mockUseCase = MockWeatherUseCase()
+        ..result(
+          Future.value(
+            const Result<FetchWeatherResponse, WeatherErrorType>.failure(
+              WeatherErrorType.unknown,
+            ),
+          ),
+        );
+      providerScope = ProviderScope(
+        overrides: [
+          fetchWeatherUseCaseProvider.overrideWithValue(
+            mockUseCase,
+          ),
+        ],
+        child: const _WeatherTestScreen(),
+      );
+      await tester.pumpWidget(providerScope);
+      await tester.pumpAndSettle();
+      // Act
+      await tester.tap(find.text('Reload'));
+      // pumpAndSettleだとタイムアウトしてしまうので pumpにする
+      await tester.pump(const Duration(milliseconds: 100));
+      // Assert
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.text('エラーが発生しました'), findsOneWidget);
+      expect(find.text(WeatherErrorType.unknown.message), findsOneWidget);
+    },
+  );
 }

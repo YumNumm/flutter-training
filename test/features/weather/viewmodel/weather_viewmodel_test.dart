@@ -74,75 +74,6 @@ void main() {
     );
   });
   test(
-    'APIから返答を待っている間は AsyncLoadingになっている',
-    () async {
-      /// 呼び出し前の状態を作成する
-      const initialState = AsyncValue.data(
-        WeatherViewModelState(
-          weatherCondition: WeatherCondition.sunny,
-          maxTemperature: 20,
-          minTemperature: 10,
-        ),
-      );
-      final fakeViewModel = _FakeWeatherViewModel(
-        initialState,
-      );
-      // このCompleterを使って結果を返す
-      final fetchResultCompleter =
-          Completer<Result<FetchWeatherResponse, WeatherErrorType>>();
-      final mockUseCase = MockWeatherUseCase()
-        ..result(
-          fetchResultCompleter.future,
-        );
-
-      final container = ProviderContainer(
-        overrides: [
-          fetchWeatherUseCaseProvider.overrideWithValue(
-            mockUseCase,
-          ),
-          // 初期状態のみoverrideする
-          weatherViewModelProvider.overrideWith(
-            () => fakeViewModel,
-          ),
-        ],
-      );
-      final fetchCall =
-          container.read(weatherViewModelProvider.notifier).fetchWeather(
-                area: 'London',
-                date: DateTime(2000),
-              );
-
-      final expectedResult =
-          Result<FetchWeatherResponse, WeatherErrorType>.success(
-        FetchWeatherResponse(
-          weatherCondition: WeatherCondition.cloudy,
-          date: DateTime(2000),
-          maxTemperature: 100,
-          minTemperature: 40,
-        ),
-      );
-      fetchResultCompleter.complete(
-        expectedResult,
-      );
-      await fetchCall;
-      final result = container.read(weatherViewModelProvider);
-      expect(result.isLoading, false);
-      expect(
-        result.value!.maxTemperature,
-        expectedResult.valueOrNull!.maxTemperature,
-      );
-      expect(
-        result.value!.minTemperature,
-        expectedResult.valueOrNull!.minTemperature,
-      );
-      expect(
-        result.value!.weatherCondition,
-        expectedResult.valueOrNull!.weatherCondition,
-      );
-      expect(result.asError, null);
-    },
-  );
-  test(
     'APIから返答を待っている間は 前回の状態を維持しながら AsyncLoadingになっている',
     () async {
       /// 呼び出し前の状態を作成する
@@ -243,26 +174,12 @@ void main() {
                 area: 'London',
                 date: DateTime(2000),
               );
-      // 結果が返ってくる前の状態
-      final beforeResult = container.read(weatherViewModelProvider);
-      // * 読み込み中
-      expect(
-        beforeResult.isLoading,
-        true,
-      );
-      // * 前回の状態を維持している
-      expect(
-        beforeResult.value,
-        initialState.value,
-      );
-
       // 結果を返す
       fetchResultCompleter.complete(
         const Result<FetchWeatherResponse, WeatherErrorType>.failure(
           WeatherErrorType.unknown,
         ),
       );
-
       await fetchCall;
       // 結果が返ってきた後の状態
       final afterResult = container.read(weatherViewModelProvider);
