@@ -310,7 +310,7 @@ void main() {
       // Completerで結果を返していないので AsyncLoadingなはず
       expect(
         find.byType(CircularProgressIndicator),
-        findsWidgets,
+        findsOneWidget,
       );
     },
   );
