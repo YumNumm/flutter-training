@@ -19,6 +19,7 @@ class WeatherScreen extends HookConsumerWidget {
       // Call開始時にローディングを表示
       if (next.isLoading) {
         showLoadingOverlay(context: context);
+        return;
       }
       // Call終了時にローディングを閉じる
       if ((previous?.isLoading ?? false) && !next.isLoading) {
