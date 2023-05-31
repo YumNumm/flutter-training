@@ -1,6 +1,6 @@
 import 'package:flutter_training/common/extension/async_value_guard.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
-import 'package:flutter_training/features/weather/model/weather_error_type.dart';
+import 'package:flutter_training/features/weather/model/weather_exception.dart';
 import 'package:flutter_training/features/weather/model/weather_view_model_state.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';

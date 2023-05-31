@@ -6,6 +6,7 @@ import 'package:flutter_training/features/weather/model/fetch_weather_request.da
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
 import 'package:flutter_training/features/weather/model/weather_condition.dart';
 import 'package:flutter_training/features/weather/model/weather_error_type.dart';
+import 'package:flutter_training/features/weather/model/weather_exception.dart';
 import 'package:flutter_training/features/weather/model/weather_view_model_state.dart';
 import 'package:flutter_training/features/weather/use_case/weather_use_case.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';

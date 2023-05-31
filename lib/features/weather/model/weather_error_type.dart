@@ -6,11 +6,3 @@ enum WeatherErrorType {
   const WeatherErrorType(this.message);
   final String message;
 }
-
-class WeatherExcepiton implements Exception {
-  const WeatherExcepiton(this.type);
-  final WeatherErrorType type;
-
-  @override
-  String toString() => type.message;
-}

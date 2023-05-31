@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
-import 'package:flutter_training/features/weather/model/weather_error_type.dart';
+import 'package:flutter_training/features/weather/model/weather_exception.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
