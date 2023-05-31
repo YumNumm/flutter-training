@@ -29,8 +29,9 @@ class WeatherScreen extends HookConsumerWidget {
       if (previous.isLoading && !next.isLoading) {
         Navigator.of(context).pop();
         if (next.error != null) {
-          if (next.error is WeatherExcepiton) {
-            final errorType = (next.error! as WeatherExcepiton).type;
+          final error = next.error!;
+          if (error is WeatherExcepiton) {
+            final errorType = error.type;
             showErrorDialog(
               context: context,
               title: 'エラーが発生しました',
@@ -42,7 +43,7 @@ class WeatherScreen extends HookConsumerWidget {
             context: context,
             title: 'エラーが発生しました',
             message: '不明なエラーが発生しました。\n'
-                '${next.error}',
+                '$error',
           );
           return;
         }
