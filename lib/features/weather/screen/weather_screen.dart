@@ -24,18 +24,27 @@ class WeatherScreen extends HookConsumerWidget {
       if (previous == null) {
         return;
       }
-      
+
       // Call終了時にローディングを閉じる
       if (previous.isLoading && !next.isLoading) {
         Navigator.of(context).pop();
-
-        if (next.asError != null) {
-          final errorType = (next.asError!.error as WeatherExcepiton).type;
+        if (next.error != null) {
+          if (next.error is WeatherExcepiton) {
+            final errorType = (next.error! as WeatherExcepiton).type;
+            showErrorDialog(
+              context: context,
+              title: 'エラーが発生しました',
+              message: errorType.message,
+            );
+            return;
+          }
           showErrorDialog(
             context: context,
             title: 'エラーが発生しました',
-            message: errorType.message,
+            message: '不明なエラーが発生しました。\n'
+                '${next.error}',
           );
+          return;
         }
       }
     });
