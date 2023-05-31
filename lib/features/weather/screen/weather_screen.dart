@@ -24,7 +24,7 @@ class WeatherScreen extends HookConsumerWidget {
       if (previous == null) {
         return;
       }
-      
+
       // Call終了時にローディングを閉じる
       if (previous.isLoading && !next.isLoading) {
         Navigator.of(context).pop();
