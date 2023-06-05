@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:isolate';
 
 import 'package:flutter_training/features/weather/model/fetch_weather_request.dart';
 import 'package:flutter_training/features/weather/model/fetch_weather_response.dart';
@@ -20,11 +21,15 @@ class WeatherDataSource {
   WeatherDataSource(this._yumemiWeather);
   final YumemiWeather _yumemiWeather;
 
-  FetchWeatherResponse fetchWeather(FetchWeatherRequest request) {
-    final jsonResponse = _yumemiWeather.fetchWeather(jsonEncode(request));
-    final weatherResponse = FetchWeatherResponse.fromJson(
-      jsonDecode(jsonResponse) as Map<String, dynamic>,
-    );
+  Future<FetchWeatherResponse> fetchWeather(FetchWeatherRequest request) async {
+    final weatherResponse = await Isolate.run(() async {
+      final response = _yumemiWeather.syncFetchWeather(
+        jsonEncode(request),
+      );
+      return FetchWeatherResponse.fromJson(
+        jsonDecode(response) as Map<String, dynamic>,
+      );
+    });
     return weatherResponse;
   }
 }

@@ -23,12 +23,12 @@ final yumemiWeatherProvider = Provider<YumemiWeather>.internal(
 );
 
 typedef YumemiWeatherRef = ProviderRef<YumemiWeather>;
-String _$weatherViewModelHash() => r'4cd7f3c70d1261c6701435f309e6c766c853ba27';
+String _$weatherViewModelHash() => r'7da42fdd7f3480c6e78a4a24ddbc0e5a402052f9';
 
 /// See also [WeatherViewModel].
 @ProviderFor(WeatherViewModel)
 final weatherViewModelProvider = AutoDisposeNotifierProvider<WeatherViewModel,
-    Result<WeatherViewModelState, WeatherErrorType>>.internal(
+    AsyncValue<WeatherViewModelState?>>.internal(
   WeatherViewModel.new,
   name: r'weatherViewModelProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -39,5 +39,5 @@ final weatherViewModelProvider = AutoDisposeNotifierProvider<WeatherViewModel,
 );
 
 typedef _$WeatherViewModel
-    = AutoDisposeNotifier<Result<WeatherViewModelState, WeatherErrorType>>;
+    = AutoDisposeNotifier<AsyncValue<WeatherViewModelState?>>;
 // ignore_for_file: unnecessary_raw_strings, subtype_of_sealed_class, invalid_use_of_internal_member, do_not_use_environment, prefer_const_constructors, public_member_api_docs, avoid_private_typedef_functions

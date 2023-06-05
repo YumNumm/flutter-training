@@ -1,5 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_training/features/weather/components/weather_temperature_widget.dart';
+import 'package:flutter_training/features/weather/model/weather_exception.dart';
 import 'package:flutter_training/features/weather/viewmodel/weather_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,38 +14,48 @@ class WeatherScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(weatherViewModelProvider);
-    ref.listen(weatherViewModelProvider.select((value) => value.errorOrNull),
-        (_, error) async {
-      if (error == null) {
+    ref.listen(weatherViewModelProvider, (previous, next) {
+      log(next.toString());
+      // Call開始時にローディングを表示
+      if (next.isLoading) {
+        showLoadingOverlay(context: context);
         return;
       }
-      await showErrorDialog(
-        context: context,
-        title: 'エラーが発生しました',
-        message: error.message,
-      );
-      // 状態をリセットする
-      ref.invalidate(weatherViewModelProvider);
+      if (previous == null) {
+        return;
+      }
+
+      // Call終了時にローディングを閉じる
+      if (previous.isLoading && !next.isLoading) {
+        Navigator.of(context).pop();
+        final error = next.error;
+        if (error != null) {
+          if (error is WeatherExcepiton) {
+            showErrorDialog(
+              context: context,
+              title: 'エラーが発生しました',
+              message: error.type.message,
+            );
+            return;
+          }
+          showErrorDialog(
+            context: context,
+            title: 'エラーが発生しました',
+            message: '不明なエラーが発生しました。\n'
+                '$error',
+          );
+          return;
+        }
+      }
     });
 
     final body = Column(
       children: [
         const Spacer(),
-        state.when(
-          success: (data) {
-            return WeatherTemperatureWidget(
-              weatherCondition: data.weatherCondition,
-              maxTemperature: data.maxTemperature,
-              minTemperature: data.minTemperature,
-            );
-          },
-          failure: (_) {
-            return const WeatherTemperatureWidget(
-              weatherCondition: null,
-              maxTemperature: null,
-              minTemperature: null,
-            );
-          },
+        WeatherTemperatureWidget(
+          weatherCondition: state.value?.weatherCondition,
+          maxTemperature: state.value?.maxTemperature,
+          minTemperature: state.value?.minTemperature,
         ),
         Flexible(
           child: Column(
@@ -93,6 +107,20 @@ class WeatherScreen extends HookConsumerWidget {
           );
         },
       );
+
+  Future<void> showLoadingOverlay({
+    required BuildContext context,
+  }) async {
+    await showDialog<void>(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
 }
 
 class _Buttons extends StatelessWidget {
